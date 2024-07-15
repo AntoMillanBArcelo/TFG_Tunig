@@ -1,67 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/headerStyle.css') }}">
     <script src="{{ asset('js/script.js') }}"></script>
+    <title>Menu</title>
 </head>
- <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Bootstrap Nav</a>
+<body>
+    <nav class="menu">
+        <h1>
+        <a href="#menu">Click me</a>
+        </h1>
+        <div class="popover" id="menu">
+            <div class="content">
+                <div class="menu__item">
+                    <a class="menu__item-link">Showreel</a>
+                    <img class="menu__item-img" src="img/1.jpg" alt="Some image">
+                    <div class="marquee">
+                        <div class="marquee__inner" aria-hidden="true">
+                            <span>Showreel</span>
+                            <span>Showreel</span>
+                            <span>Showreel</span>
+                            <span>Showreel</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu__item">
+                    <a class="menu__item-link">Case Studies</a>
+                    <img class="menu__item-img" src="img/2.jpg" alt="Some image">
+                    <div class="marquee">
+                        <div class="marquee__inner" aria-hidden="true">
+                            <span>Case Studies</span>
+                            <span>Case Studies</span>
+                            <span>Case Studies</span>
+                            <span>Case Studies</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu__item">
+                    <a class="menu__item-link">Experiments</a>
+                    <img class="menu__item-img" src="img/3.jpg" alt="Some image">
+                    <div class="marquee">
+                        <div class="marquee__inner" aria-hidden="true">
+                            <span>Experiments</span>
+                            <span>Experiments</span>
+                            <span>Experiments</span>
+                            <span>Experiments</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu__item">
+                    <a class="menu__item-link">Our Crew</a>
+                    <img class="menu__item-img" src="img/4.jpg" alt="Some image">
+                    <div class="marquee">
+                        <div class="marquee__inner" aria-hidden="true">
+                            <span>The Crew</span>
+                            <span>The Crew</span>
+                            <span>The Crew</span>
+                            <span>The Crew</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu__item">
+                    <a class="menu__item-link">Contact</a>
+                    <img class="menu__item-img" src="img/5.jpg" alt="Some image">
+                    <div class="marquee">
+                        <div class="marquee__inner" aria-hidden="true">
+                            <span>Contact</span>
+                            <span>Contact</span>
+                            <span>Contact</span>
+                            <span>Contact</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <!-- Level 1 -->
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
-                        <ul class="dropdown-menu multi-level">
-                            <li><a href="#">Level 1</a></li>                                                       
-                            <li class="dropdown-submenu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Level 1</a>
-                                <!-- Level 2 -->
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Level 2</a></li>                                    
-                                    <li class="dropdown-submenu">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Level 2</a>
-                                        <!-- Level 3 -->
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Level 3</a></li>
-                                            <li class="dropdown-submenu">
-                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Level 3</a>
-                                                <!-- Level 4 -->
-                                                <ul class="dropdown-menu">
-                                                    <li><a href="#">Level 4</a></li>
-                                                    <li><a href="#">Level 4</a></li>
-                                                    <li><a href="#">Level 4</a></li>          
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>                    
-                </ul>        
-            </div>
-            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container -->
     </nav>
-
 </body>
+</html>
