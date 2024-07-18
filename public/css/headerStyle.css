@@ -8,12 +8,9 @@
     font-size: 15px;
 }
 
+
 body {
     margin: 0;
-    --color-text: #111;
-    --color-bg: #f8ecde;
-    --color-link: #b19e7f;
-    --color-link-hover: #000;
     color: var(--color-text);
     background-color: var(--color-bg);
     -webkit-font-smoothing: antialiased;
@@ -90,7 +87,7 @@ a:focus {
 .menu__item-img {
     pointer-events: none;
     position: absolute;
-    height: 50vh;
+    height: 40vh;
     max-height: 400px;
     opacity: 0;
     left: 100%;
@@ -170,7 +167,7 @@ a:focus {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.8);
     z-index: 1000;
-    justify-content: center;
+    
     overflow-y: auto;
     background-image: url('../images/fondoMenu2.png'); /* Añadir imagen de fondo al menú */
     background-size: cover; /* Ajusta el tamaño de la imagen para que cubra todo el menú */
@@ -183,17 +180,16 @@ a:focus {
 
 .popover .content {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
     width: 90%;
-    max-width: 800px;
-    height: 80%;
+    height: 5%;
     color: #fff;
     animation: grow 0.3s ease forwards;
-    text-align: center;
-    padding: 20px;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 22%;
 }
+
 
 .popover .close {
     position: absolute;
@@ -226,3 +222,248 @@ a:focus {
         height: 90%;
     }
 }
+
+
+
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 90deg;
+    inherits: true;
+  }
+  
+  @property --gradX {
+    syntax: '<percentage>';
+    initial-value: 50%;
+    inherits: true;
+  }
+  
+  @property --gradY {
+    syntax: '<percentage>';
+    initial-value: 0%;
+    inherits: true;
+  }
+
+  :root {
+	--d: 2500ms;
+	--angle: 90deg;
+	--gradX: 100%;
+	--gradY: 50%;
+	--c1: rgba(168, 239, 255, 1);
+	--c2: rgba(168, 239, 255, 0.1);
+}
+
+.h1 {
+	font-size: 3vw;
+	margin: max(1rem, 3vw);
+	border: 0.35rem solid;
+	padding: 3vw;
+	border-image: conic-gradient(from var(--angle), var(--c2), var(--c1) 0.1turn, var(--c1) 0.15turn, var(--c2) 0.25turn) 30;
+	animation: borderRotate var(--d) linear infinite forwards;
+}
+
+@keyframes borderRotate {
+	100% {
+		--angle: 420deg;
+	}
+}
+
+@keyframes borderRadial {
+	20% {
+		--gradX: 100%;
+		--gradY: 50%;
+	}
+	40% {
+		--gradX: 100%;
+		--gradY: 100%;
+	}
+	60% {
+		--gradX: 50%;
+		--gradY: 100%;
+	}
+	80% {
+		--gradX: 0%;
+		--gradY: 50%;
+	}
+	100% {
+		--gradX: 50%;
+		--gradY: 0%;
+	}
+
+}
+
+h1 {
+    --border-width: 0.1em;
+    --animation-speed: 0.5s;
+    --color: #ffffff;
+    color: var(--color);
+    position: relative;
+    display: inline-block;
+    font-size: 2em;
+    line-height: 1em;
+    transform: scale(1, 0.8);
+    border: var(--border-width) solid transparent;
+    
+    a {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      font-family: 'Six Caps', sans-serif;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      padding: 0.2em;
+      background: rgba(50, 50, 50, 0.5);
+      background: #333;
+      z-index: 1;
+      border: solid var(--border-width) transparent;
+    }
+    
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      background: var(--color);
+    }
+    
+    &:focus:before,
+    &:hover:before {
+      animation: beforeBorders var(--animation-speed) forwards ease-in-out;
+    }
+  
+    &:focus:after,
+    &:hover:after {
+      animation: afterBorders var(--animation-speed) forwards ease-in-out;
+    }
+    
+    &:focus,
+    &:hover {
+      animation: borderColors var(--animation-speed) steps(1) forwards;
+      outline: none;
+  
+      .border-animation__inner {
+        animation: background calc(var(--animation-speed) / 5 * 3) forwards ease-in-out;
+        animation-delay: calc(var(--animation-speed) / 5 * 2);
+      }
+    }
+  }
+  
+  @keyframes beforeBorders {
+    0% {
+      top: calc(var(--border-width) * -1);
+      left: 50%;
+      bottom: auto;
+      right: auto;
+      width: 0;
+      height: var(--border-width);
+    }
+    33% {    
+      top: calc(var(--border-width) * -1);
+      left: calc(var(--border-width) * -1);
+      bottom: auto;
+      right: auto;
+      width: calc(var(--border-width) + 50%);
+      height: var(--border-width);
+    }
+    66% {
+      top: calc(var(--border-width) * -1);
+      left: calc(var(--border-width) * -1);
+      bottom: auto;
+      right: auto;
+      width: var(--border-width);
+      height: calc((var(--border-width) * 2) + 100%);
+    }
+    100% {
+      top: auto;
+      left: calc(var(--border-width) * -1);
+      bottom: calc(var(--border-width) * -1);
+      right: auto;
+      width: calc(var(--border-width) + 50%);
+      height: calc((var(--border-width) * 2) + 100%);
+    }
+  }
+  
+  @keyframes afterBorders {
+    0% {
+      top: calc(var(--border-width) * -1);
+      left: auto;
+      bottom: auto;
+      right: 50%;
+      width: 0;
+      height: var(--border-width);
+    }
+    33% {    
+      top: calc(var(--border-width) * -1);
+      left: auto;
+      bottom: auto;
+      right: calc(var(--border-width) * -1);
+      width: calc(var(--border-width) + 50%);
+      height: var(--border-width);
+    }
+    66% {
+      top: calc(var(--border-width) * -1);
+      left: auto;
+      bottom: auto;
+      right: calc(var(--border-width) * -1);
+      width: var(--border-width);
+      height: calc((var(--border-width) * 2) + 100%);
+    }
+    100% {
+      top: auto;
+      left: auto;
+      bottom: calc(var(--border-width) * -1);
+      right: calc(var(--border-width) * -1);
+      width: calc(var(--border-width) + 50%);
+      height: calc((var(--border-width) * 2) + 100%);
+    }
+  }
+  
+  @keyframes borderColors {
+    0% {
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-left-color: transparent;
+    }
+    33% {
+      border-top-color: var(--color);
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-left-color: transparent;
+  
+    }
+    66% {
+      border-top-color: var(--color);
+      border-right-color: var(--color);
+      border-bottom-color: transparent;
+      border-left-color: var(--color);
+    }
+    100% {
+      border-top-color: var(--color);
+      border-right-color: var(--color);
+      border-bottom-color: var(--color);
+      border-left-color: var(--color);
+    }
+  }
+  
+  @keyframes background {
+    to {
+      background: #555;
+      text-shadow: 0 0.1em 0.1em #111;
+    }
+  }
+  
+  @media (min-width: 850px) {
+    body {
+      justify-content: center;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .border-animation {
+      font-size: 6em;
+      line-height: 1em;    
+    }
+  }
+
+    

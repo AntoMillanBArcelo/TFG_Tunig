@@ -24,23 +24,28 @@
             position: relative;
             z-index: 1;
             display: flex;
-            justify-content: center;
             align-items: center;
             height: 100%;
             color: white;
             font-size: 2em;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .content img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
-{% include 'header.html.twig' %}
+
     <video class="video-background" autoplay muted loop>
         <source src="{{ asset('images/video/fondo.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     <div class="content">
-        <h1>Welcome to My Website</h1>
+        <img src="{{ asset('images/logo.png') }}" alt="Logo">
+          {% include 'header.html.twig' %}
     </div>
-    
 </body>
 </html>
