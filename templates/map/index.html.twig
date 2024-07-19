@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 100%;
+            background-color: white;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .modal-content {
+            padding: 20px;
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-btn:hover,
+        .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <img id="modal-image" src="" alt="Imagen" style="width: 100%;">
+        </div>
+    </div>
+
+    <script>
+        // Crear el mapa
+        var map = L.map('map', {
+            crs: L.CRS.Simple,
+            minZoom: -2,
+            maxZoom: 2,
+            maxBoundsViscosity: 1.0
+        });
+
+        // Tamaño de la imagen (en píxeles)
+        var bounds = [[0, 0], [7048, 14096]];
+        var image = L.imageOverlay('{{ asset('images/map.png') }}', bounds).addTo(map);
+
+        // Ajustar la vista inicial del mapa a los límites de la imagen
+        map.fitBounds(bounds);
+
+        // Limitar el desplazamiento del mapa a los límites de la imagen
+        map.setMaxBounds(bounds);
+
+        // Array de puntos (coordenadas x, y dentro de la imagen y la ruta de la imagen para el modal)
+        var points = [
+            { coords: [3000, 10310], image: '{{ asset('images/carreras/carrera1.png') }}' },
+            { coords: [1870, 8430], image: '{{ asset('images/carreras/carrera2.png') }}' },
+            { coords: [4960, 10500], image: '{{ asset('images/carreras/carrera3.png') }}' },
+            { coords: [4350, 7600], image: '{{ asset('images/carreras/carrera4.png') }}' },
+            { coords: [4270, 6480], image: '{{ asset('images/carreras/carrera5.png') }}' },
+            { coords: [850, 6980], image: '{{ asset('images/carreras/carrera6.png') }}' },
+            { coords: [3800, 9050], image: '{{ asset('images/carreras/carrera7.png') }}' },
+            { coords: [3750, 5230], image: '{{ asset('images/carreras/carrera1.png') }}' }
+        ];
+
+        // Obtener el modal y el contenido del modal
+        var modal = document.getElementById('modal');
+        var modalImg = document.getElementById('modal-image');
+        var span = document.getElementsByClassName('close-btn')[0];
+
+        // Agregar marcadores al mapa
+        points.forEach(function(point) {
+            L.marker(point.coords).addTo(map).on('click', function() {
+                modalImg.src = point.image;
+                modal.style.display = 'block';
+            });
+        });
+
+        // Cuando el usuario hace clic en (x), cerrar el modal
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Cuando el usuario hace clic fuera del modal, cerrarlo
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
