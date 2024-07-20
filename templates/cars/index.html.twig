@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Car Logos and 3D Models</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+        #logoContainer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="logoContainer"></div>
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+        "GLTFLoader": "https://unpkg.com/three@0.150.1/examples/jsm/loaders/GLTFLoader.js",
+        "FBXLoader": "https://unpkg.com/three@0.150.1/examples/jsm/loaders/FBXLoader.js",
+        "OrbitControls": "https://unpkg.com/three@0.150.1/examples/jsm/controls/OrbitControls.js"
+      }
+    }
+    </script>
+    <script type="module">
+      import * as THREE from 'three';
+      import { GLTFLoader } from 'GLTFLoader';
+      import { FBXLoader } from 'FBXLoader';
+      import { OrbitControls } from 'OrbitControls';
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.target.set(0, 1, 0);
+      controls.update();
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.position.set(0, 1, 1).normalize();
+      scene.add(directionalLight);
+
+      camera.position.set(0, 2, 5);
+
+      let garage;
+      const loader = new GLTFLoader();
+      loader.load('/models/gar.glb', (gltf) => {
+        garage = gltf.scene;
+        scene.add(garage);
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      const logoContainer = document.getElementById('logoContainer');
+
+      const carData = [
+        { brand: 'Toyota', logo: '/logos/toyota_logo.png', model: '/models/toyota_model.glb', type: 'gltf' },
+        { brand: 'Ford', logo: '/logos/ford_logo.png', model: '/models/ford_model.glb', type: 'gltf' },
+        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', model: '/models/nfsm3.glb', type: 'gltf' },
+        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', model: '/models/pualR34.glb', type: 'gltf' },
+        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', model: '/models/r34.glb', type: 'gltf' },
+        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', model: '/models/ford_mustang_boss_302.glb', type: 'gltf' },
+        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', model: '/models/ford_mustang_gt.glb', type: 'gltf' },
+      ];
+
+      carData.forEach(car => {
+        const img = document.createElement('img');
+        img.src = car.logo;
+        img.className = 'logo';
+        img.alt = car.brand;
+        img.addEventListener('click', () => loadCarModel(car));
+        logoContainer.appendChild(img);
+      });
+
+      function clearCarModels() {
+        while (scene.children.length > 2) {  // Deja la luz ambiental y la luz direccional
+          scene.remove(scene.children[2]);
+        }
+      }
+
+      function loadCarModel(car) {
+        clearCarModels();
+
+        const loader = car.type === 'gltf' ? new GLTFLoader() : new FBXLoader();
+        loader.load(
+          car.model,
+          (gltf) => {
+            const model = car.type === 'gltf' ? gltf.scene : gltf;
+            model.traverse((child) => {
+              if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+              }
+            });
+
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+
+            model.position.x += (model.position.x - center.x);
+            model.position.y += (model.position.y - center.y);
+            model.position.z += (model.position.z - center.z);
+
+            const maxAxis = Math.max(size.x, size.y, size.z);
+            model.scale.setScalar(2 / maxAxis);
+
+            scene.add(model);
+            scene.add(ambientLight);
+            scene.add(directionalLight);
+            camera.position.set(0, 2, 5);
+            controls.target.set(0, 1, 0);
+            controls.update();
+          },
+          undefined,
+          (error) => {
+            console.error('Error al cargar el modelo:', error);
+          }
+        );
+      }
+    </script>
+</body>
+</html>

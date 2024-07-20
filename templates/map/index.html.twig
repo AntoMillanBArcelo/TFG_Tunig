@@ -26,27 +26,31 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 300px;
+            width: 400px;
             height: 100%;
-            background-color: white;
+            background-color: #333;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
             z-index: 1000;
             overflow-y: auto;
         }
         .modal-content {
-            padding: 20px;
+            
         }
         .close-btn {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
+            padding: 10px;
         }
         .close-btn:hover,
         .close-btn:focus {
             color: black;
             text-decoration: none;
             cursor: pointer;
+        }
+        .modal-image{
+             padding: 0;
         }
     </style>
 </head>
@@ -82,14 +86,14 @@
 
         // Array de puntos (coordenadas x, y dentro de la imagen y la ruta de la imagen para el modal)
         var points = [
-            { coords: [3000, 10310], image: '{{ asset('images/carreras/carrera1.png') }}' },
-            { coords: [1870, 8430], image: '{{ asset('images/carreras/carrera2.png') }}' },
-            { coords: [4960, 10500], image: '{{ asset('images/carreras/carrera3.png') }}' },
-            { coords: [4350, 7600], image: '{{ asset('images/carreras/carrera4.png') }}' },
-            { coords: [4270, 6480], image: '{{ asset('images/carreras/carrera5.png') }}' },
-            { coords: [850, 6980], image: '{{ asset('images/carreras/carrera6.png') }}' },
-            { coords: [3800, 9050], image: '{{ asset('images/carreras/carrera7.png') }}' },
-            { coords: [3750, 5230], image: '{{ asset('images/carreras/carrera1.png') }}' }
+            { coords: [3000, 10310], image: '{{ asset('images/carreras/carrera1.jpg') }}' },
+            { coords: [1870, 8430], image: '{{ asset('images/carreras/carrera2.jpg') }}' },
+            { coords: [4960, 10500], image: '{{ asset('images/carreras/carrera3.jpg') }}' },
+            { coords: [4350, 7600], image: '{{ asset('images/carreras/carrera4.jpg') }}' },
+            { coords: [4270, 6480], image: '{{ asset('images/carreras/carrera5.jpg') }}' },
+            { coords: [850, 6980], image: '{{ asset('images/carreras/carrera6.jpg') }}' },
+            { coords: [3800, 9050], image: '{{ asset('images/carreras/carrera7.jpg') }}' },
+            { coords: [3750, 5230], image: '{{ asset('images/carreras/carrera1.jpg') }}' }
         ];
 
         // Obtener el modal y el contenido del modal
