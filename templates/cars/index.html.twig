@@ -11,12 +11,22 @@
             top: 10px;
             left: 10px;
             display: flex;
+            flex-direction: column;
             gap: 10px;
+            background-color: white;
+            border-style: solid;
+            border-color: black;
+            padding: 10px;
         }
         .logo {
             width: 50px;
             height: 50px;
             cursor: pointer;
+        }
+        .model-container {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
         }
     </style>
 </head>
@@ -38,6 +48,10 @@
       import { FBXLoader } from 'FBXLoader';
       import { OrbitControls } from 'OrbitControls';
 
+      let selectedCar = null;
+      let rotating = true;
+      let rotationSpeed = 0.01;
+
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
       const renderer = new THREE.WebGLRenderer();
@@ -48,14 +62,18 @@
       controls.target.set(0, 1, 0);
       controls.update();
 
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Aumenta la intensidad de la luz ambiental
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-      directionalLight.position.set(0, 1, 1).normalize();
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 2); // Ajusta la intensidad de la luz direccional
+      directionalLight.position.set(0, 5, 5).normalize(); // Cambia la posición de la luz
       scene.add(directionalLight);
 
-      camera.position.set(0, 2, 5);
+      const pointLight = new THREE.PointLight(0xffffff, 1.5); // Agrega una luz puntual
+      pointLight.position.set(0, 3, 0);
+      scene.add(pointLight);
+
+      camera.position.set(3, 2, 5); // Mueve la cámara más a la derecha
 
       let garage;
       const loader = new GLTFLoader();
@@ -66,6 +84,13 @@
 
       function animate() {
         requestAnimationFrame(animate);
+
+        if (rotating) {
+          camera.position.x = camera.position.x * Math.cos(rotationSpeed) + camera.position.z * Math.sin(rotationSpeed);
+          camera.position.z = camera.position.z * Math.cos(rotationSpeed) - camera.position.x * Math.sin(rotationSpeed);
+          camera.lookAt(scene.position);
+        }
+
         controls.update();
         renderer.render(scene, camera);
       }
@@ -75,62 +100,88 @@
       const logoContainer = document.getElementById('logoContainer');
 
       const carData = [
-        { brand: 'Toyota', logo: '/logos/toyota_logo.png', model: '/models/toyota_model.glb', type: 'gltf' },
-        { brand: 'Ford', logo: '/logos/ford_logo.png', model: '/models/ford_model.glb', type: 'gltf' },
-        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', model: '/models/nfsm3.glb', type: 'gltf' },
-        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', model: '/models/pualR34.glb', type: 'gltf' },
-        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', model: '/models/r34.glb', type: 'gltf' },
-        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', model: '/models/ford_mustang_boss_302.glb', type: 'gltf' },
-        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', model: '/models/ford_mustang_gt.glb', type: 'gltf' },
+        { brand: 'Toyota', logo: '/logos/toyota_logo.png', models: [{ name: 'Model 1', path: '/models/toyota_model.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } }] },
+        { brand: 'Ford', logo: '/logos/ford_logo.png', models: [{ name: 'Model 1', path: '/models/ford_model.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } }] },
+        { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', models: [
+            { name: 'Model 1', path: '/models/nfsm3.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 2', path: '/models/pualR34.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 3', path: '/models/r34.glb' , type: 'gltf', position: { x: 10, y: 0, z: 10 } },
+            { name: 'Model 4', path: '/models/r334.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 5', path: '/models/ford_mustang_boss_302.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 6', path: '/models/ford_mustang_gt.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 7', path: '/models/r35.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 8', path: '/models/mk4.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } }
+        ]},
+        { brand: 'BMW', logo: '/logos/bm.png', models: [{ name: 'Model 1', path: '/models/r334.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } }] },
       ];
-
+  
       carData.forEach(car => {
-        const img = document.createElement('img');
-        img.src = car.logo;
-        img.className = 'logo';
-        img.alt = car.brand;
-        img.addEventListener('click', () => loadCarModel(car));
-        logoContainer.appendChild(img);
+        const brandDiv = document.createElement('div');
+        const brandLogo = document.createElement('img');
+        brandLogo.src = car.logo;
+        brandLogo.className = 'logo';
+        brandLogo.alt = car.brand;
+        brandLogo.addEventListener('click', () => toggleModelContainer(car.brand));
+        brandDiv.appendChild(brandLogo);
+
+        const modelContainer = document.createElement('div');
+        modelContainer.className = 'model-container';
+        modelContainer.id = `model-container-${car.brand}`;
+        car.models.forEach(model => {
+          const modelButton = document.createElement('button');
+          modelButton.textContent = model.name;
+          modelButton.addEventListener('click', () => loadCarModel(model));
+          modelContainer.appendChild(modelButton);
+        });
+
+        brandDiv.appendChild(modelContainer);
+        logoContainer.appendChild(brandDiv);
       });
 
-      function clearCarModels() {
-        while (scene.children.length > 2) {  // Deja la luz ambiental y la luz direccional
-          scene.remove(scene.children[2]);
-        }
+      function toggleModelContainer(brand) {
+        const modelContainer = document.getElementById(`model-container-${brand}`);
+        modelContainer.style.display = modelContainer.style.display === 'none' || modelContainer.style.display === '' ? 'flex' : 'none';
       }
 
-      function loadCarModel(car) {
-        clearCarModels();
+      function clearCarModels() {
+        // Deja la cochera y las luces en la escena
+        const keepObjects = [garage, ambientLight, directionalLight, pointLight];
+        scene.children.forEach(child => {
+          if (!keepObjects.includes(child)) {
+            scene.remove(child);
+          }
+        });
+      }
 
-        const loader = car.type === 'gltf' ? new GLTFLoader() : new FBXLoader();
+      function loadCarModel(model) {
+        clearCarModels();
+        rotating = false;
+
+        const loader = new GLTFLoader();
         loader.load(
-          car.model,
+          model.path,
           (gltf) => {
-            const model = car.type === 'gltf' ? gltf.scene : gltf;
-            model.traverse((child) => {
+            const carModel = gltf.scene;
+            carModel.traverse((child) => {
               if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
               }
             });
 
-            const box = new THREE.Box3().setFromObject(model);
-            const center = box.getCenter(new THREE.Vector3());
+            carModel.position.set(0, 0, 0);
+
+            const box = new THREE.Box3().setFromObject(carModel);
             const size = box.getSize(new THREE.Vector3());
-
-            model.position.x += (model.position.x - center.x);
-            model.position.y += (model.position.y - center.y);
-            model.position.z += (model.position.z - center.z);
-
             const maxAxis = Math.max(size.x, size.y, size.z);
-            model.scale.setScalar(2 / maxAxis);
+            carModel.scale.setScalar(6 / maxAxis); // Incrementa la escala de los modelos
 
-            scene.add(model);
-            scene.add(ambientLight);
-            scene.add(directionalLight);
-            camera.position.set(0, 2, 5);
+            scene.add(carModel);
+            camera.position.set(3, 2, 5); // Asegura que la cámara esté en la nueva posición
             controls.target.set(0, 1, 0);
             controls.update();
+
+            selectedCar = carModel;
           },
           undefined,
           (error) => {
