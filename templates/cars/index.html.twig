@@ -2,20 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Car Logos and 3D Models</title>
+    <title>Unbound</title>
     <style>
-        body { margin: 0; }
+        body { margin: 0; overflow: hidden; }
         canvas { display: block; }
         #logoContainer {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background-color: white;
-            border-style: solid;
-            border-color: black;
+            flex-direction: row;
+            gap: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid black;
+            
             padding: 10px;
         }
         .logo {
@@ -25,8 +26,31 @@
         }
         .model-container {
             display: none;
+            position: absolute;
+            bottom: 70px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 10px;
             flex-direction: column;
             gap: 5px;
+            z-index: 10;
+        }
+        .model-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .model-button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
@@ -70,14 +94,14 @@
       scene.add(directionalLight);
 
       const pointLight = new THREE.PointLight(0xffffff, 1.5); // Agrega una luz puntual
-      pointLight.position.set(0, 3, 0);
+      pointLight.position.set(0, 3, 4);
       scene.add(pointLight);
 
-      camera.position.set(3, 2, 5); // Mueve la cámara más a la derecha
+      camera.position.set(0, 1, 7); // Mueve la cámara más a la derecha
 
       let garage;
       const loader = new GLTFLoader();
-      loader.load('/models/gar.glb', (gltf) => {
+      loader.load('/models/parking_garage.glb', (gltf) => {
         garage = gltf.scene;
         scene.add(garage);
       });
@@ -100,28 +124,44 @@
       const logoContainer = document.getElementById('logoContainer');
 
       const carData = [
-        { brand: 'Toyota', logo: '/logos/toyota_logo.png', models: [{ name: 'Model 1', path: '/models/toyota_model.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } }] },
-        { brand: 'Ford', logo: '/logos/ford_logo.png', models: [{ name: 'Model 1', path: '/models/ford_model.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } }] },
+        { brand: 'Ford', logo: '/logos/dodge.svg', models: [
+            { name: 'daytona 1969', path: '/models/doms_dodge_charger_daytona_1969_fastfurious_6.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 } }
+        ] },
         { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', models: [
-            { name: 'Model 1', path: '/models/nfsm3.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 2', path: '/models/pualR34.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 3', path: '/models/r34.glb' , type: 'gltf', position: { x: 10, y: 0, z: 10 } },
-            { name: 'Model 4', path: '/models/r334.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 5', path: '/models/ford_mustang_boss_302.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 6', path: '/models/ford_mustang_gt.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 7', path: '/models/r35.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 8', path: '/models/mk4.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } }
+            { name: 'Model 2', path: '/models/pualR34.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 3', path: '/models/r34.glb', type: 'gltf', position: { x: 10, y: 0, z: 10 } },
+            { name: 'Model 4', path: '/models/r334.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 5', path: '/models/ford_mustang_boss_302.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 6', path: '/models/ford_mustang_gt.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 7', path: '/models/r35.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
         ]},
-        { brand: 'BMW', logo: '/logos/bm.png', models: [{ name: 'Model 1', path: '/models/r334.glb' , type: 'gltf', position: { x: 0, y: 0, z: 0 } }] },
+        { brand: 'BMW', logo: '/logos/bm.png', models: [
+            { name: 'e34', path: '/models/bmw_e34_stance_style.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'm4', path: '/models/bmw_m4_realistic_free.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 3', path: '/models/r334.glb', type: 'gltf', position: { x: 10, y: 0, z: 10 } },
+            { name: 'm3', path: '/models/2001_bmw_m3-gtr.glb', type: 'gltf', position: { x: 0, y: 0, z: -8 } },
+        ]},
+        { brand: 'BMW5', logo: '/logos/bm.png', models: [
+            { name: 'Model 1', path: '/models/doms_dodge_charger_daytona_1969_fastfurious_6.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Model 2', path: '/models/jiotto_caspita_roadster_1989.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+        ]},
+        { brand: 'Toyota', logo: '/logos/toyo.png', models: [
+            { name: 'Supra mk4', path: '/models/mk4.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Supra mk5', path: '/models/toyota_gr_supra.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+        ]},
+         { brand: 'Porsche', logo: '/logos/por.png', models: [
+            { name: '911 Carrera s4', path: '/models/free_porsche_911_carrera_4s.glb', type: 'gltf', position: { x: 0.8, y: 0.8, z: 0 } },
+            { name: '911 930 turbo', path: '/models/porsche_911_930_turbo_1975.glb', type: 'gltf', position: { x: 2, y: 2.7, z: -1 } },
+        ]},
       ];
-  
+
       carData.forEach(car => {
         const brandDiv = document.createElement('div');
         const brandLogo = document.createElement('img');
         brandLogo.src = car.logo;
         brandLogo.className = 'logo';
         brandLogo.alt = car.brand;
-        brandLogo.addEventListener('click', () => toggleModelContainer(car.brand));
+        brandLogo.addEventListener('click', (event) => toggleModelContainer(event, car.brand));
         brandDiv.appendChild(brandLogo);
 
         const modelContainer = document.createElement('div');
@@ -130,6 +170,7 @@
         car.models.forEach(model => {
           const modelButton = document.createElement('button');
           modelButton.textContent = model.name;
+          modelButton.className = 'model-button';
           modelButton.addEventListener('click', () => loadCarModel(model));
           modelContainer.appendChild(modelButton);
         });
@@ -138,8 +179,10 @@
         logoContainer.appendChild(brandDiv);
       });
 
-      function toggleModelContainer(brand) {
+      function toggleModelContainer(event, brand) {
         const modelContainer = document.getElementById(`model-container-${brand}`);
+        const rect = event.target.getBoundingClientRect();
+        modelContainer.style.left = `${rect.left}px`;
         modelContainer.style.display = modelContainer.style.display === 'none' || modelContainer.style.display === '' ? 'flex' : 'none';
       }
 
@@ -169,7 +212,7 @@
               }
             });
 
-            carModel.position.set(0, 0, 0);
+            carModel.position.set(model.position.x, model.position.y, model.position.z); // Usar la posición del modelo
 
             const box = new THREE.Box3().setFromObject(carModel);
             const size = box.getSize(new THREE.Vector3());
@@ -177,8 +220,8 @@
             carModel.scale.setScalar(6 / maxAxis); // Incrementa la escala de los modelos
 
             scene.add(carModel);
-            camera.position.set(3, 2, 5); // Asegura que la cámara esté en la nueva posición
-            controls.target.set(0, 1, 0);
+            camera.position.set(-7,1, 8); // Asegura que la cámara esté en la nueva posición
+            controls.target.set(-0.5, 1, 4);
             controls.update();
 
             selectedCar = carModel;
