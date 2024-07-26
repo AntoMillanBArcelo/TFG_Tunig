@@ -1,0 +1,70 @@
+body { margin: 0; overflow: hidden; }
+canvas { display: block; }
+#logoContainer {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid black;
+    padding: 10px;
+}
+.logo {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+.model-container {
+    display: none;
+    position: absolute;
+    bottom: 9vh;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    flex-direction: row;
+    gap: 5px;
+    z-index: 10;
+}
+.model-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+    
+    width: max-content;
+}
+.model-button:hover {
+    background-color: #45a049;
+}
+/* Estilos para la ventana modal */
+#modal {
+    display: none;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 20;
+}
+#modal h2 {
+    margin-top: 0;
+}
+#closeModal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}

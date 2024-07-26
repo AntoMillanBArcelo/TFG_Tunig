@@ -3,59 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Unbound</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-        #logoContainer {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border: 2px solid black;
-            
-            padding: 10px;
-        }
-        .logo {
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-        }
-        .model-container {
-            display: none;
-            position: absolute;
-            bottom: 70px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 2px solid black;
-            border-radius: 10px;
-            padding: 10px;
-            flex-direction: column;
-            gap: 5px;
-            z-index: 10;
-        }
-        .model-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .model-button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/garajeStyle.css') }}">
 </head>
 <body>
     <div id="logoContainer"></div>
+    <div id="modal">
+        <span id="closeModal">&times;</span>
+        <h2 id="modalTitle"></h2>
+        <p id="modalContent"></p>
+    </div>
     <script type="importmap">
     {
       "imports": {
@@ -97,7 +53,15 @@
       pointLight.position.set(0, 3, 4);
       scene.add(pointLight);
 
-      camera.position.set(0, 1, 7); // Mueve la cámara más a la derecha
+      const spotLight = new THREE.SpotLight(0xffffff, 1.5); // Agrega una luz focal
+      spotLight.position.set(5, 5, 0);
+      spotLight.angle = Math.PI / 6;
+      spotLight.penumbra = 0.;
+      spotLight.decay = 2;
+      spotLight.distance = 50;
+      scene.add(spotLight);
+
+      camera.position.set(0, 1, 6.8); // Mueve la cámara más a la derecha
 
       let garage;
       const loader = new GLTFLoader();
@@ -125,35 +89,33 @@
 
       const carData = [
         { brand: 'Ford', logo: '/logos/dodge.svg', models: [
-            { name: 'daytona 1969', path: '/models/doms_dodge_charger_daytona_1969_fastfurious_6.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 } }
+            { name: 'daytona 1969', path: '/models/doms_dodge_charger_daytona_1969_fastfurious_6.glb', type: 'gltf', position: { x: 0, y: -0.5, z: 3 }, description: 'Descripción del modelo daytona 1969.' },
+            { name: 'challenger 1970', path: '/models/dodge_challenger_1970.glb', type: 'gltf', position: { x: 0, y: -0.5, z: 3 }, description: 'Descripción del modelo challenger 1970.' },
         ] },
         { brand: 'Nissan', logo: '/logos/Nissan_logo.svg', models: [
-            { name: 'Model 2', path: '/models/pualR34.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 3', path: '/models/r34.glb', type: 'gltf', position: { x: 10, y: 0, z: 10 } },
-            { name: 'Model 4', path: '/models/r334.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 5', path: '/models/ford_mustang_boss_302.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 6', path: '/models/ford_mustang_gt.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 7', path: '/models/r35.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Skyline GTR r33', path: '/models/nissan_skyline_gtr_r33.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo Nissan Model 2.' },
+            { name: 'Skyline GTR r34', path: '/models/2002_nissan_skyline_gt-r_r34_v-spec_ii.glb', type: 'gltf', position: { x:123 , y: -6.3, z: 33 }, description: 'Descripción del modelo Nissan Model 3.' },
+            { name: 'Skyline GTR r35', path: '/models/r35.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo Nissan Model 7.' },
         ]},
         { brand: 'BMW', logo: '/logos/bm.png', models: [
-            { name: 'e34', path: '/models/bmw_e34_stance_style.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'm4', path: '/models/bmw_m4_realistic_free.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 3', path: '/models/r334.glb', type: 'gltf', position: { x: 10, y: 0, z: 10 } },
-            { name: 'm3', path: '/models/2001_bmw_m3-gtr.glb', type: 'gltf', position: { x: 0, y: 0, z: -8 } },
+            { name: 'e34', path: '/models/bmw_e34_stance_style.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo BMW e34.' },
+            { name: 'm4', path: '/models/bmw_m4_realistic_free.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo BMW m4.' },
+            { name: 'm3', path: '/models/2001_bmw_m3-gtr.glb', type: 'gltf', position: { x: -1.5, y: -0.6, z: -3.5 }, description: 'Descripción del modelo BMW m3.' },
         ]},
-        { brand: 'BMW5', logo: '/logos/bm.png', models: [
-            { name: 'Model 1', path: '/models/doms_dodge_charger_daytona_1969_fastfurious_6.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Model 2', path: '/models/jiotto_caspita_roadster_1989.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+        { brand: 'Caspita', logo: '/logos/Captura.png', models: [
+            { name: 'Jiotto Caspita', path: '/models/jiotto_caspita_roadster_1989.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo BMW5 Model 2.' },
         ]},
         { brand: 'Toyota', logo: '/logos/toyo.png', models: [
-            { name: 'Supra mk4', path: '/models/mk4.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
-            { name: 'Supra mk5', path: '/models/toyota_gr_supra.glb', type: 'gltf', position: { x: 0, y: 0, z: 0 } },
+            { name: 'Supra mk4', path: '/models/mk4.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo Toyota Supra mk4.' },
+            { name: 'Supra mk5', path: '/models/toyota_gr_supra.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo Toyota Supra mk5.' },
         ]},
          { brand: 'Porsche', logo: '/logos/por.png', models: [
-            { name: '911 Carrera s4', path: '/models/free_porsche_911_carrera_4s.glb', type: 'gltf', position: { x: 0.8, y: 0.8, z: 0 } },
-            { name: '911 930 turbo', path: '/models/porsche_911_930_turbo_1975.glb', type: 'gltf', position: { x: 2, y: 2.7, z: -1 } },
+            { name: '911 Carrera s4', path: '/models/free_porsche_911_carrera_4s.glb', type: 'gltf', position: { x: 0, y: 0.15, z: 3 }, description: 'Descripción del modelo Porsche 911 Carrera s4.' },
+            { name: '911 930 turbo', path: '/models/porsche_911_930_turbo_1975.glb', type: 'gltf', position: { x: 2, y:2.2, z: 2 }, description: 'Descripción del modelo Porsche 911 930 turbo.' },
         ]},
       ];
+
+      let lastOpenedContainer = null;
 
       carData.forEach(car => {
         const brandDiv = document.createElement('div');
@@ -181,14 +143,23 @@
 
       function toggleModelContainer(event, brand) {
         const modelContainer = document.getElementById(`model-container-${brand}`);
-        const rect = event.target.getBoundingClientRect();
-        modelContainer.style.left = `${rect.left}px`;
-        modelContainer.style.display = modelContainer.style.display === 'none' || modelContainer.style.display === '' ? 'flex' : 'none';
+
+        if (lastOpenedContainer && lastOpenedContainer !== modelContainer) {
+          lastOpenedContainer.style.display = 'none';
+        }
+
+        if (modelContainer.style.display === 'none' || modelContainer.style.display === '') {
+          modelContainer.style.display = 'flex';
+          modelContainer.style.flexDirection = 'row';
+        } else {
+          modelContainer.style.display = 'none';
+        }
+
+        lastOpenedContainer = modelContainer;
       }
 
       function clearCarModels() {
-        // Deja la cochera y las luces en la escena
-        const keepObjects = [garage, ambientLight, directionalLight, pointLight];
+        const keepObjects = [garage, ambientLight, directionalLight, pointLight, spotLight];
         scene.children.forEach(child => {
           if (!keepObjects.includes(child)) {
             scene.remove(child);
@@ -220,11 +191,16 @@
             carModel.scale.setScalar(6 / maxAxis); // Incrementa la escala de los modelos
 
             scene.add(carModel);
-            camera.position.set(-7,1, 8); // Asegura que la cámara esté en la nueva posición
+
+            spotLight.target = carModel; // Apunta la luz focal al modelo cargado
+            spotLight.position.set(model.position.x, model.position.y + 10, model.position.z);
+
+            camera.position.set(-7, 1, 8); // Asegura que la cámara esté en la nueva posición
             controls.target.set(-0.5, 1, 4);
             controls.update();
 
             selectedCar = carModel;
+            showModal(model); // Muestra la ventana modal con la información del modelo
           },
           undefined,
           (error) => {
@@ -232,6 +208,21 @@
           }
         );
       }
+
+      function showModal(model) {
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        
+        modalTitle.textContent = model.name;
+        modalContent.textContent = model.description;
+        
+        modal.style.display = 'block';
+      }
+
+      document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('modal').style.display = 'none';
+      });
     </script>
 </body>
 </html>
