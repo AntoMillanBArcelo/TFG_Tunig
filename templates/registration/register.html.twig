@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('css/registerStyle.css') }}">
+
+<div class="container">
+    <h1 class="h3 mb-3 font-weight-normal">Crea una cuenta</h1>
+
+    {{ form_errors(registrationForm) }}
+
+    {{ form_start(registrationForm) }}
+        <div class="form-row">
+            {{ form_row(registrationForm.email) }}
+        </div>
+        <div class="form-row">
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Contraseña'
+            }) }}
+        </div>
+
+        <button type="submit" class="btn">Registrarse</button>
+    {{ form_end(registrationForm) }}
+
+    <a href="{{ path('app_login') }}" class="login-link">Already have an account? Log in here</a>
+</div>
+{% endblock %}

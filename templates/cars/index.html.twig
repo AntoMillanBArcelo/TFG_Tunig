@@ -6,11 +6,16 @@
     <link rel="stylesheet" href="{{ asset('css/garajeStyle.css') }}">
 </head>
 <body>
+{% if app.user %}
+    <div id="detectaLogin" data-id="{{ app.user.id }}"></div>
+{% endif %}
+
     <div id="logoContainer"></div>
     <div id="modal">
         <span id="closeModal">&times;</span>
         <h2 id="modalTitle"></h2>
         <p id="modalContent"></p>
+        <button id="acquireButton">Adquirir</button>
     </div>
     <script type="importmap">
     {
@@ -98,9 +103,9 @@
             { name: 'Skyline GTR r35', path: '/models/r35.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo Nissan Model 7.' },
         ]},
         { brand: 'BMW', logo: '/logos/bm.png', models: [
-            { name: 'e34', path: '/models/bmw_e34_stance_style.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo BMW e34.' },
-            { name: 'm4', path: '/models/bmw_m4_realistic_free.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo BMW m4.' },
-            { name: 'm3', path: '/models/2001_bmw_m3-gtr.glb', type: 'gltf', position: { x: -1.5, y: -0.6, z: -3.5 }, description: 'Descripción del modelo BMW m3.' },
+            { name: 'e34', path: '/models/bmw_e34_stance_style.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'El BMW E34 es la tercera generación del BMW Serie 5, que se produjo desde el 2 de noviembre de 1987 hasta 1996. Lanzado inicialmente como sedán en enero de 1988, al E34 también se le añadió un estilo de carrocería familiar "Touring". en septiembre de 1992, una primicia para la Serie 5. BMW reemplazó el E34 por el Serie 5 E39 en diciembre de 1995, aunque los modelos E34 Touring permanecieron en producción hasta junio de 1996.' },
+            { name: 'm3', path: '/models/2001_bmw_m3-gtr.glb', type: 'gltf', position: { x: -1.5, y: -0.6, z: -3.5 }, description: 'El BMW M3 GTR (E46) es un coche de carreras de BMW basado en el M3 E46.Originalmente fue equipado con un motor de seis cilindros en línea de 3.2 litros basado en el motor del E46 M3. El coche entró primero a la clase GT de la American Le Mans Series en 2000, en la que sólo consiguió una sola victoria y fue vencido en varias ocasiones por el Porsche 911 GT3-R.' },
+            { name: 'm4', path: '/models/bmw_m4_realistic_free.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'El nuevo BMW M4 Competition Coupé impresiona con 405 kW (510 CV) y un par de 650 Nm. Equipado con un motor BMW M TwinPower Turbo de elevadas prestaciones, cambio M Steptronic de 8 velocidades con Drivelogic, tracción a las cuatro ruedas M xDrive (opcional), diferencial M activo y numerosas tecnologías derivadas del mundo de la competición, garantiza el máximo dinamismo de conducción, tanto en el uso diario como en el circuito.' },
         ]},
         { brand: 'Caspita', logo: '/logos/Captura.png', models: [
             { name: 'Jiotto Caspita', path: '/models/jiotto_caspita_roadster_1989.glb', type: 'gltf', position: { x: 0, y: -0.6, z: 3 }, description: 'Descripción del modelo BMW5 Model 2.' },
@@ -218,10 +223,59 @@
         modalContent.textContent = model.description;
         
         modal.style.display = 'block';
+
+        const acquireButton = document.getElementById('acquireButton');
+        acquireButton.style.display = 'block';
+        acquireButton.onclick = () => acquireCar(model);
       }
+
+      function acquireCar(model) {
+    const detectaLogin = document.getElementById('detectaLogin');
+    const userId = detectaLogin ? parseInt(detectaLogin.getAttribute('data-id'), 10) : 0;
+    
+    if (userId > 0) {
+        const carData = {
+            marca: null,
+            modelo: model.name,
+            año: null,
+            color: null,
+            usuario_id: userId
+        };
+
+        fetch('/api/cars', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(carData)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Error en la petición: ' + response.statusText);
+            }
+        })
+        .then(data => {
+            alert(`El usuario con ID ${userId} ha adquirido el coche: ${model.name}`);
+            console.log('Coche guardado:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ocurrió un error al guardar el coche. Inténtelo nuevamente.');
+        });
+    } else {
+        alert('Debe iniciar sesión para adquirir un coche.');
+    }
+}
+
+
+
 
       document.getElementById('closeModal').addEventListener('click', () => {
         document.getElementById('modal').style.display = 'none';
+        const acquireButton = document.getElementById('acquireButton');
+        acquireButton.style.display = 'none';
       });
     </script>
 </body>

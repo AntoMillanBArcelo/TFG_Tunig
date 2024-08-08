@@ -2,18 +2,18 @@
 
 body {
     background-image: url('/images/fondoLogin2.jpg');
-    background-size: cover; /* Ajusta la imagen para que cubra todo el fondo */
-   
-    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-size: cover; 
+    background-repeat: no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    font-family: Arial, sans-serif;
 }
 
 form {
-    background-color: rgba(255, 255, 255, 0.9); /* Color de fondo blanco con opacidad para que la imagen de fondo sea visible */
+    background-color: rgba(255, 255, 255, 0.9); 
     padding: 2rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;

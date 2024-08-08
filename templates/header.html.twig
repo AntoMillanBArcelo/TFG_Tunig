@@ -16,7 +16,7 @@
             <div class="content">
                 <div class="menu__item">
                     <a class="menu__item-link"  href="{{ path('app_cars') }}">Ver Coches</a>
-                    <img class="menu__item-img" src="images/menu/coche.png" alt="Some image">
+                    <img class="menu__item-img" src="{{ asset('images/menu/coche.png') }}" alt="Some image">
                     <div class="marquee">
                         <div class="marquee__inner" aria-hidden="true">
                             <span>Ver Coches</span>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="menu__item">
                     <a class="menu__item-link" href="{{ path('app_map') }}">Circuito</a>
-                    <img class="menu__item-img" src="images/menu/circuito.png" alt="Some image">
+                    <img class="menu__item-img" src="{{ asset('images/menu/circuito.png') }}" alt="Some image">
                     <div class="marquee">
                         <div class="marquee__inner" aria-hidden="true">
                             <span>Circuito</span>
@@ -38,19 +38,33 @@
                         </div>
                     </div>
                 </div>
-                <div class="menu__item">
-                   <a class="menu__item-link" href="{{ path('app_login') }}">Iniciar Sesión</a>
-                    <img class="menu__item-img" src="images/menu/login.png" alt="Some image">
-                    <div class="marquee">
-                        <div class="marquee__inner" aria-hidden="true">
-                            <span>Iniciar Sesión</span>
-                            <span>Iniciar Sesión</span>
-                            <span>Iniciar Sesión</span>
-                            <span>Iniciar Sesión</span>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <div class="menu__item">
+                        <a class="menu__item-link" href="{{ path('app_perfil') }}">Tú perfil</a>
+                        <img class="menu__item-img" src="{{ asset('images/menu/perfil.png') }}" alt="Some image">
+                        <div class="marquee">
+                            <div class="marquee__inner" aria-hidden="true">
+                                <span>Perfil</span>
+                                <span>Perfil</span>
+                                <span>Perfil</span>
+                                <span>Perfil</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
+                {% else %}
+                    <div class="menu__item">
+                        <a class="menu__item-link" href="{{ path('app_login') }}">Iniciar Sesión</a>
+                        <img class="menu__item-img" src="{{ asset('images/menu/login.png') }}" alt="Some image">
+                        <div class="marquee">
+                            <div class="marquee__inner" aria-hidden="true">
+                                <span>Iniciar Sesión</span>
+                                <span>Iniciar Sesión</span>
+                                <span>Iniciar Sesión</span>
+                                <span>Iniciar Sesión</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </nav>

@@ -1,0 +1,34 @@
+{# templates/perfil/car_details.html.twig #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/perfilStyle.css') }}">
+    <title>Detalles del Coche</title>
+</head>
+<body>
+    <div class="background-video">
+        <video autoplay muted loop>
+            <source src="{{ asset('images/video/fondoPerfil.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="content">
+        <header>
+            <div class="header-content">
+                <span>Detalles del Coche</span>
+                <a href="{{ path('app_perfil') }}" class="back-button">Volver a Perfil</a>
+            </div>
+        </header>
+        <main>
+            <div class="car-details">
+                <h1>{{ car.modelo }}</h1>
+                <p>Marca: {{ car.marca }}</p>
+                <p>Año: {{ car.año }}</p>
+                <p>Color: {{ car.color }}</p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -19,8 +19,15 @@ class Pieza
     #[ORM\Column(length: 255)]
     private ?string $descripcion = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $velocidadPunta = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $categoria = null;
+
+    #[ORM\ManyToOne(targetEntity: Motor::class, inversedBy: 'piezas')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Motor $motor = null;
 
     public function getId(): ?int
     {
@@ -59,6 +66,30 @@ class Pieza
     public function setVelocidadPunta(int $velocidadPunta): static
     {
         $this->velocidadPunta = $velocidadPunta;
+
+        return $this;
+    }
+
+    public function getCategoria(): ?string
+    {
+        return $this->categoria;
+    }
+
+    public function setCategoria(string $categoria): static
+    {
+        $this->categoria = $categoria;
+
+        return $this;
+    }
+
+    public function getMotor(): ?Motor
+    {
+        return $this->motor;
+    }
+
+    public function setMotor(?Motor $motor): static
+    {
+        $this->motor = $motor;
 
         return $this;
     }

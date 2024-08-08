@@ -68,3 +68,15 @@ canvas { display: block; }
     right: 10px;
     cursor: pointer;
 }
+#acquireButton {
+    display: none; /* El botón estará oculto por defecto */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

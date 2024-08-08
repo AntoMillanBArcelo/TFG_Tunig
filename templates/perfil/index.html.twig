@@ -1,0 +1,50 @@
+{# templates/perfil/index.html.twig #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/perfilStyle.css') }}">
+    <title>Perfil</title>
+</head>
+<body>
+    <div class="background-video">
+        <video autoplay muted loop>
+            <source src="{{ asset('images/video/fondoPerfil.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="content">
+        <header>
+            <div class="header-content">
+                <span>Bienvenido, {{ user.email }}</span>
+                <a href="{{ path('app_logout') }}" class="logout-button">Cerrar Sesión</a>
+            </div>
+        </header>
+        <main>
+            <div class="container">
+                <div class="left-pane">
+                    <h2>Lista de Coches</h2>
+                    <ul>
+                        {% for car in cars %}
+                            <li><a href="{{ path('app_car_details', {'id': car.id}) }}">{{ car.modelo }} - {{ car.marca }}</a></li>
+                        {% else %}
+                            <li>No tienes coches registrados.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="right-pane">
+                    <h2>Lista de Carreras</h2>
+                    <ul>
+                        {# {% for race in races %}
+                            <li>{{ race.name }}</li>
+                        {% else %}
+                            <li>No tienes carreras registradas.</li>
+                        {% endfor %} #}
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
