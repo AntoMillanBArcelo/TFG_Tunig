@@ -20,5 +20,14 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+     # Explicitly configure CustomErrorController as a service
+    App\Controller\CustomErrorController:
+        tags: ['controller.service_arguments']
+        
+  # Configure ExceptionListener with the required arguments and tags
+    App\EventListener\ExceptionListener:
+        arguments: ['@twig']
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

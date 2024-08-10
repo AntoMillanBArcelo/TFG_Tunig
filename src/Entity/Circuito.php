@@ -14,34 +14,34 @@ class Circuito
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nombre = null;
+    private ?string $descripcion = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $ubicacion = null;
+    #[ORM\Column]
+    private ?int $ubicacion = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNombre(): ?string
+    public function getDescripcion(): ?string
     {
-        return $this->nombre;
+        return $this->descripcion;
     }
 
-    public function setNombre(string $nombre): static
+    public function setDescripcion(string $descripcion): static
     {
-        $this->nombre = $nombre;
+        $this->descripcion = $descripcion;
 
         return $this;
     }
 
-    public function getUbicacion(): ?string
+    public function getUbicacion(): ?int
     {
         return $this->ubicacion;
     }
 
-    public function setUbicacion(string $ubicacion): static
+    public function setUbicacion(int $ubicacion): static
     {
         $this->ubicacion = $ubicacion;
 

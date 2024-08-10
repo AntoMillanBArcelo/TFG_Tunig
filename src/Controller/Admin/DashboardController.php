@@ -21,16 +21,17 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 class DashboardController extends AbstractDashboardController
 {
+  
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        // Si deseas redirigir a una página específica
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
-
-        // O si deseas renderizar tu propia plantilla
+        if (!$this->isGranted('ROLE_ADMIN')) 
+        {
+            return $this->redirectToRoute('app_login'); 
+        }
         return $this->render('admin/easyadmin.html.twig');
     }
+    
 
 
     public function configureDashboard(): Dashboard

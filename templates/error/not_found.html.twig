@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error 404 - Página no encontrada</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        .error-container {
+            text-align: center;
+        }
+        h1 {
+            font-size: 4em;
+        }
+        p {
+            font-size: 1.2em;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <img src="{{ asset('images/error.gif') }}" alt="Error 404">
+        <h1>Error 404</h1>
+        <p>La página que estás buscando no pudo ser encontrada.</p>
+        <a href="{{ path('app_video_background') }}">Volver a la página de inicio</a>
+    </div>
+</body>
+</html>

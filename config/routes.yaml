@@ -3,3 +3,7 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+not_found:
+    path: /error/not_found
+    controller: App\Controller\CustomErrorController::notFound
