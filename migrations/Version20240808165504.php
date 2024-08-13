@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240810162953 extends AbstractMigration
+final class Version20240808165504 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -24,6 +24,6 @@ final class Version20240810162953 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-      
+       
     }
 }

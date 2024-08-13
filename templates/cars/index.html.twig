@@ -188,24 +188,24 @@
               }
             });
 
-            carModel.position.set(model.position.x, model.position.y, model.position.z); // Usar la posición del modelo
+            carModel.position.set(model.position.x, model.position.y, model.position.z);
 
             const box = new THREE.Box3().setFromObject(carModel);
             const size = box.getSize(new THREE.Vector3());
             const maxAxis = Math.max(size.x, size.y, size.z);
-            carModel.scale.setScalar(6 / maxAxis); // Incrementa la escala de los modelos
+            carModel.scale.setScalar(6 / maxAxis);
 
             scene.add(carModel);
 
-            spotLight.target = carModel; // Apunta la luz focal al modelo cargado
+            spotLight.target = carModel; 
             spotLight.position.set(model.position.x, model.position.y + 10, model.position.z);
 
-            camera.position.set(-7, 1, 8); // Asegura que la cámara esté en la nueva posición
+            camera.position.set(-7, 1, 8); 
             controls.target.set(-0.5, 1, 4);
             controls.update();
 
             selectedCar = carModel;
-            showModal(model); // Muestra la ventana modal con la información del modelo
+            showModal(model); 
           },
           undefined,
           (error) => {
@@ -215,32 +215,51 @@
       }
 
       function showModal(model) {
-        const modal = document.getElementById('modal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalContent = document.getElementById('modalContent');
-        
-        modalTitle.textContent = model.name;
-        modalContent.textContent = model.description;
-        
-        modal.style.display = 'block';
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+    
+    // Debug: Verificar el contenido de model
+    console.log('Objeto model recibido en showModal:', model);
 
-        const acquireButton = document.getElementById('acquireButton');
-        acquireButton.style.display = 'block';
-        acquireButton.onclick = () => acquireCar(model);
-      }
+    modalTitle.textContent = model.name;
+    modalContent.textContent = model.description;
+    
+    modal.style.display = 'block';
 
-      function acquireCar(model) {
+    const acquireButton = document.getElementById('acquireButton');
+    acquireButton.style.display = 'block';
+
+    // Verificar si brand está definido, de lo contrario usar un valor por defecto o mostrar un mensaje de error
+    const brand = model.brand ? model.brand : "Marca desconocida"; 
+
+    acquireButton.onclick = () => acquireCar({
+       
+        name: model.name,
+        path: model.path,
+        description: model.description
+    });
+}
+
+
+
+
+     function acquireCar(model) {
     const detectaLogin = document.getElementById('detectaLogin');
     const userId = detectaLogin ? parseInt(detectaLogin.getAttribute('data-id'), 10) : 0;
     
     if (userId > 0) {
         const carData = {
-            marca: null,
             modelo: model.name,
             año: null,
             color: null,
-            usuario_id: userId
+            usuario_id: userId,
+            modelo3d: model.path,  // Cambiado de ruta_modelo a modelo3d
+        
         };
+
+        // Log de los datos que se van a enviar al servidor
+        console.log('Datos que se van a enviar:', carData);
 
         fetch('/api/cars', {
             method: 'POST',
@@ -253,7 +272,10 @@
             if (response.ok) {
                 return response.json();
             } else {
-                throw new Error('Error en la petición: ' + response.statusText);
+                return response.json().then(errorData => {
+                    const errorMessage = errorData.error || 'Error desconocido';
+                    throw new Error(`Error en la petición: ${response.statusText}. Detalles: ${errorMessage}`);
+                });
             }
         })
         .then(data => {
@@ -262,7 +284,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Ocurrió un error al guardar el coche. Inténtelo nuevamente.');
+            alert('Ocurrió un error al guardar el coche. Inténtelo nuevamente. Detalles: ' + error.message);
         });
     } else {
         alert('Debe iniciar sesión para adquirir un coche.');

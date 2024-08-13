@@ -169,9 +169,9 @@ a:focus {
     z-index: 1000;
     
     overflow-y: auto;
-    background-image: url('../images/fondoMenu2.png'); /* Añadir imagen de fondo al menú */
-    background-size: cover; /* Ajusta el tamaño de la imagen para que cubra todo el menú */
-    background-position: center; /* Centra la imagen de fondo */
+    background-image: url('../images/fondoMenu2.png'); 
+    background-size: cover; 
+    background-position: center; 
 }
 
 .popover:target {

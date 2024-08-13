@@ -25,6 +25,12 @@ class Coche
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $color = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $modelo3d = null; // Nueva propiedad para almacenar la ruta del modelo 3D
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $logo = null; // Nueva propiedad para almacenar la ruta del logo
+
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'usuario_id', referencedColumnName: 'id')]
     private ?User $usuario = null;
@@ -82,6 +88,30 @@ class Coche
     public function setColor(?string $color): static
     {
         $this->color = $color;
+
+        return $this;
+    }
+
+    public function getModelo3d(): ?string
+    {
+        return $this->modelo3d;
+    }
+
+    public function setModelo3d(?string $modelo3d): static
+    {
+        $this->modelo3d = $modelo3d;
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(?string $logo): static
+    {
+        $this->logo = $logo;
 
         return $this;
     }

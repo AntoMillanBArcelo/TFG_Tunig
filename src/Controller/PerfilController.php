@@ -8,7 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\CocheRepository;
 use App\Repository\CircuitoRepository;
-
+use App\Repository\MotorRepository;
+use App\Repository\PiezaRepository;
+use Symfony\Component\HttpFoundation\Request;
 class PerfilController extends AbstractController
 {
     #[Route('/perfil', name: 'app_perfil')]
@@ -29,16 +31,37 @@ class PerfilController extends AbstractController
     }
 
     #[Route('/coche/{id}', name: 'app_car_details')]
-    public function carDetails(int $id, CocheRepository $carRepository): Response
-    {
-        $car = $carRepository->find($id);
+public function carDetails(
+    int $id, 
+    CocheRepository $carRepository, 
+    MotorRepository $motorRepository, 
+    PiezaRepository $piezaRepository, 
+    Request $request
+): Response {
+    $car = $carRepository->find($id);
 
-        if (!$car) {
-            throw $this->createNotFoundException('El coche no existe.');
-        }
-
-        return $this->render('perfil/car_details.html.twig', [
-            'car' => $car,
-        ]);
+    if (!$car) {
+        throw $this->createNotFoundException('El coche no existe.');
     }
+
+    $selectedType = $request->query->get('type', 'motor');
+    $selectedId = $request->query->get('id');
+
+    $items = $selectedType === 'motor' ? $motorRepository->findAll() : $piezaRepository->findAll();
+
+    $selectedItem = $selectedType === 'motor' 
+        ? ($selectedId ? $motorRepository->find($selectedId) : null)
+        : ($selectedId ? $piezaRepository->find($selectedId) : null);
+
+    return $this->render('perfil/car_details.html.twig', [
+        'car' => $car,
+        'items' => $items,
+        'selectedType' => $selectedType,
+        'selectedMotor' => $selectedType === 'motor' ? $selectedItem : null,
+        'selectedPieza' => $selectedType === 'pieza' ? $selectedItem : null,
+    ]);
+}
+
+
+
 }
