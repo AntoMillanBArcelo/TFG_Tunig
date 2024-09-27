@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\CocheRepository;
@@ -26,10 +25,10 @@ class Coche
     private ?string $color = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $modelo3d = null; // Nueva propiedad para almacenar la ruta del modelo 3D
+    private ?string $modelo3d = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $logo = null; // Nueva propiedad para almacenar la ruta del logo
+    private ?string $logo = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'usuario_id', referencedColumnName: 'id')]
@@ -38,6 +37,26 @@ class Coche
     #[ORM\ManyToOne(targetEntity: Motor::class)]
     #[ORM\JoinColumn(name: 'motor_id', referencedColumnName: 'id')]
     private ?Motor $motor = null;
+
+    #[ORM\ManyToOne(targetEntity: ECU::class, inversedBy: 'coches')]
+    #[ORM\JoinColumn(name: 'ecu_id', referencedColumnName: 'id', nullable: true)]
+    private ?ECU $ecu = null;
+
+    #[ORM\ManyToOne(targetEntity: Induccion::class, inversedBy: 'coches')]
+    #[ORM\JoinColumn(name: 'induccion_id', referencedColumnName: 'id', nullable: true)]
+    private ?Induccion $induccion = null;
+
+    #[ORM\ManyToOne(targetEntity: SistemaDeCombustible::class, inversedBy: 'coches')]
+    #[ORM\JoinColumn(name: 'sistema_de_combustible_id', referencedColumnName: 'id', nullable: true)]
+    private ?SistemaDeCombustible $sistemaDeCombustible = null;
+
+    #[ORM\ManyToOne(targetEntity: Turbocompresor::class, inversedBy: 'coches')]
+    #[ORM\JoinColumn(name: 'turbocompresor_id', referencedColumnName: 'id', nullable: true)]
+    private ?Turbocompresor $turbocompresor = null;
+
+    #[ORM\ManyToOne(targetEntity: Nitro::class, inversedBy: 'coches')]
+    #[ORM\JoinColumn(name: 'nitro_id', referencedColumnName: 'id', nullable: true)]
+    private ?Nitro $nitro = null;
 
     public function getId(): ?int
     {
@@ -137,6 +156,61 @@ class Coche
     {
         $this->motor = $motor;
 
+        return $this;
+    }
+
+    public function getEcu(): ?ECU
+    {
+        return $this->ecu;
+    }
+
+    public function setEcu(?ECU $ecu): static
+    {
+        $this->ecu = $ecu;
+        return $this;
+    }
+
+    public function getInduccion(): ?Induccion
+    {
+        return $this->induccion;
+    }
+
+    public function setInduccion(?Induccion $induccion): static
+    {
+        $this->induccion = $induccion;
+        return $this;
+    }
+
+    public function getSistemaDeCombustible(): ?SistemaDeCombustible
+    {
+        return $this->sistemaDeCombustible;
+    }
+
+    public function setSistemaDeCombustible(?SistemaDeCombustible $sistemaDeCombustible): static
+    {
+        $this->sistemaDeCombustible = $sistemaDeCombustible;
+        return $this;
+    }
+
+    public function getTurbocompresor(): ?Turbocompresor
+    {
+        return $this->turbocompresor;
+    }
+
+    public function setTurbocompresor(?Turbocompresor $turbocompresor): static
+    {
+        $this->turbocompresor = $turbocompresor;
+        return $this;
+    }
+
+    public function getNitro(): ?Nitro
+    {
+        return $this->nitro;
+    }
+
+    public function setNitro(?Nitro $nitro): static
+    {
+        $this->nitro = $nitro;
         return $this;
     }
 }

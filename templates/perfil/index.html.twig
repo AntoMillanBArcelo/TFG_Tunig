@@ -37,14 +37,20 @@
                 <div class="right-pane">
                     <h2>Lista de Carreras</h2>
                     <ul>
-                        {# {% for race in races %}
-                            <li>{{ race.name }}</li>
+                       <ul>
+                            {% for inscripcion in inscripciones %}
+                            <li>
+                                <a href="{{ path('asignar_posiciones', { id: inscripcion.carrera.id }) }}">
+                                    {{ inscripcion.carrera.fecha|date('d/m/Y H:i') }} - {{ inscripcion.carrera.horario.descripcion }}
+                                </a>
+                            </li>
                         {% else %}
-                            <li>No tienes carreras registradas.</li>
-                        {% endfor %} #}
+                            <li>No estás inscrito en ninguna carrera.</li>
+                        {% endfor %}
+                        </ul>
                     </ul>
                 </div>
-            </div>
+             </div>
         </main>
     </div>
 </body>

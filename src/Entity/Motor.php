@@ -30,6 +30,24 @@ class Motor
     #[ORM\OneToMany(mappedBy: 'motor', targetEntity: Coche::class)]
     private Collection $coches;
 
+    #[ORM\ManyToOne(inversedBy: 'id_motor')]
+    #[ORM\JoinColumn(name: "ecu_id")]
+    private ?ECU $eCU = null;
+
+
+
+    #[ORM\ManyToOne(inversedBy: 'OneToMany')]
+    private ?Induccion $induccion = null;
+
+    #[ORM\ManyToOne(inversedBy: 'motor')]
+    private ?SistemaDeCombustible $sistemaDeCombustible = null;
+
+    #[ORM\ManyToOne(inversedBy: 'motor')]
+    private ?Turbocompresor $turbocompresor = null;
+
+    #[ORM\ManyToOne(inversedBy: 'relation')]
+    private ?Nitro $nitro = null;
+
     public function __construct()
     {
         $this->piezas = new ArrayCollection();
@@ -133,5 +151,73 @@ class Motor
         }
 
         return $this;
+    }
+
+    public function getECU(): ?ECU
+    {
+        return $this->eCU;
+    }
+
+    public function setECU(?ECU $eCU): static
+    {
+        $this->eCU = $eCU;
+
+        return $this;
+    }
+
+    public function getInduccion(): ?Induccion
+    {
+        return $this->induccion;
+    }
+
+    public function setInduccion(?Induccion $induccion): static
+    {
+        $this->induccion = $induccion;
+
+        return $this;
+    }
+
+    public function getSistemaDeCombustible(): ?SistemaDeCombustible
+    {
+        return $this->sistemaDeCombustible;
+    }
+
+    public function setSistemaDeCombustible(?SistemaDeCombustible $sistemaDeCombustible): static
+    {
+        $this->sistemaDeCombustible = $sistemaDeCombustible;
+
+        return $this;
+    }
+
+    public function getTurbocompresor(): ?Turbocompresor
+    {
+        return $this->turbocompresor;
+    }
+
+    public function setTurbocompresor(?Turbocompresor $turbocompresor): static
+    {
+        $this->turbocompresor = $turbocompresor;
+
+        return $this;
+    }
+
+    public function getNitro(): ?Nitro
+    {
+        return $this->nitro;
+    }
+
+    public function setNitro(?Nitro $nitro): static
+    {
+        $this->nitro = $nitro;
+
+        return $this;
+    }
+    public function getType() {
+        return 'Motor';
+    }
+
+    public function __toString(): string
+    {
+        return $this->descripcion ?? '';
     }
 }

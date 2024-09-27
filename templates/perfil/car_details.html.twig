@@ -5,60 +5,427 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/perfilStyle.css') }}">
     <title>Detalles del Coche</title>
-     <link rel="stylesheet" href="{{ asset('css/editorStyle.css') }}">
+     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        #scene-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+        }
+
+        .container {
+            position: relative; 
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+            z-index: 10;
+            color: white; 
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        .top-left {
+    width: 30%;
+    height: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1;
+    font-size: 45px;
+    color: transparent;
+    -webkit-text-stroke: 1px white;
+    text-shadow: 0px 0px 5px rgba(255, 255, 255, 0);
+    background-color: rgba(56, 54, 54, 0.8);
+}
+
+.related-parts {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.related-parts h3 {
+    font-size: 24px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.related-pparts ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.related-parts li {
+    color: white;
+    font-size: 18px;
+}
+
+.navigation-buttons {
+    margin-top: 20px;
+}
+
+.navigation-buttons .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 18px;
+    text-transform: uppercase;
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.navigation-buttons .btn-primary {
+    background-color: #007bff;
+}
+
+.navigation-buttons .btn-secondary {
+    background-color: #6c757d;
+}
+
+
+       
+
+        .top-right {
+            max-width: 60%;
+            height: 50%;
+            background-color: rgba(56, 54, 54, 0.8); 
+            padding: 10px;
+            overflow-y: auto; 
+        }
+
+        .middle {
+            width: 20%;
+            height: 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .bottom {        
+            height: 25%;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin-top: 10px;
+            overflow-y: auto;
+        }
+
+        .bottom-item {
+            flex-grow: 1;
+            border-right: 1px solid black;
+            padding: 10px;
+            border-style: solid;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; 
+            background-color: #f9f9f9; 
+        }
+
+        .bottom-item a {
+            font-family: 'Roboto', sans-serif; 
+            font-size: 14px;
+            font-weight: 500; 
+            color: #000; 
+            text-decoration: none; 
+            background-color: #fff; 
+            padding: 10px;
+            transition: font-size 0.3s ease, background-color 0.3s ease; 
+        }
+
+        .bottom-item a:hover {
+            font-size: 18px; 
+            background-color: #f1f1f1;
+        }
+
+        .button-48 {
+            appearance: none;
+            background-color: #FFFFFF;
+            border-width: 0;
+            box-sizing: border-box;
+            color: #000000;
+            cursor: pointer;
+            display: inline-block;
+            font-family: Clarkson,Helvetica,sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0;
+            line-height: 1em;
+            margin: 0;
+            opacity: 1;
+            outline: 0;
+            padding: 1.5em 2.2em;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            text-rendering: geometricprecision;
+            text-transform: uppercase;
+            transition: opacity 300ms cubic-bezier(.694, 0, 0.335, 1),background-color 100ms cubic-bezier(.694, 0, 0.335, 1),color 100ms cubic-bezier(.694, 0, 0.335, 1);
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: baseline;
+            white-space: nowrap;
+        }
+
+        .button-48:before {
+            animation: opacityFallbackOut .5s step-end forwards;
+            backface-visibility: hidden;
+            background-color: #EBEBEB;
+            clip-path: polygon(-1% 0, 0 0, -25% 100%, -1% 100%);
+            content: "";
+            height: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            transform: translateZ(0);
+            transition: clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1), -webkit-clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1);
+            width: 100%;
+        }
+
+        .button-48:hover:before {
+            animation: opacityFallbackIn 0s step-start forwards;
+            clip-path: polygon(0 0, 101% 0, 101% 101%, 0 101%);
+        }
+
+        .button-48:after {
+            background-color: #FFFFFF;
+        }
+
+        .button-48 span {
+            z-index: 1;
+            position: relative;
+        }
+        .total-velocity {
+            padding: 20px;
+            background-color: #f9f9f9; 
+            border-top: 1px solid #ddd; 
+            text-align: center; 
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px; 
+            font-weight: 700; 
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-<script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
-        "GLTFLoader": "https://unpkg.com/three@0.150.1/examples/jsm/loaders/GLTFLoader.js",
-        "FBXLoader": "https://unpkg.com/three@0.150.1/examples/jsm/loaders/FBXLoader.js",
-        "OrbitControls": "https://unpkg.com/three@0.150.1/examples/jsm/controls/OrbitControls.js"
-      }
-    }
-    let garage;
-      const loader = new GLTFLoader();
-      loader.load('/models/garage.glb', (gltf) => {
-        garage = gltf.scene;
-        scene.add(garage);
-      });
-    </script>
-    
-    <div class="container">
-        <div class="top">
-            <div class="top-left fancy">
-                <h2>{{ car.modelo }}</h2>
+    <div id="scene-container"></div>
+
+     <div class="container">
+                <div class="top">
+                    <div class="top-left">
+    <h2>{{ car.modelo }}</h2>
+
+    <div class="related-parts">
+        <h3>Piezas del coche:</h3>
+        <ul>
+            <li>Motor: {{ car.motor ? car.motor.getCaballos ~ ' caballos' : 'Sin motor' }}</li>
+            <li>ECU: {{ car.ecu ? car.ecu.getVelocidadPunta : 'Sin ECU' }}</li>
+            <li>Inducción: {{ car.induccion ? car.induccion.getVelocidadPunta : 'Sin inducción' }}</li>
+            <li>Sistema de Combustible: {{ car.sistemaDeCombustible ? car.sistemaDeCombustible.getVelocidadPunta : 'Sin sistema de combustible' }}</li>
+            <li>Turbocompresor: {{ car.turbocompresor ? car.turbocompresor.getVelocidadPunta : 'Sin turbocompresor' }}</li>
+            <li>Nitro: {{ car.nitro ? car.nitro.getVelocidadPunta : 'Sin nitro' }}</li>
+        </ul>
+    </div>
+
+    <!-- Botones para navegar -->
+    <div class="navigation-buttons">
+        <a href="/#menu" class="btn btn-primary">Menú</a>
+        <a href="{{ path('app_perfil') }}" class="btn btn-secondary">Perfil</a>
+    </div>
+
             </div>
+
             <div class="top-right">
-                <h3>Detalles del {{ selectedType == 'motor' ? 'Motor' : 'Pieza' }}</h3>
-                {% if selectedType == 'motor' and selectedMotor %}
-                    <p>Caballos: {{ selectedMotor.caballos }}</p>
-                    <p>Par Máximo: {{ selectedMotor.parMaximo }}</p>
-                    <p>Cuarto de Milla: {{ selectedMotor.cuartoMilla }}</p>
-                {% elseif selectedType == 'pieza' and selectedPieza %}
-                    <p>Nombre: {{ selectedPieza.nombre }}</p>
-                    <p>Descripción: {{ selectedPieza.descripcion }}</p>
+                <h3>Detalles del {{ selectedType | capitalize }}</h3>
+                {% if selectedType == 'motor' and selectedItem %}
+                    <p>Caballos: {{ selectedItem.caballos }}</p>
+                    <p>Par Máximo: {{ selectedItem.parMaximo }}</p>
+                    <p>Cuarto de Milla: {{ selectedItem.cuartoMilla }}</p>
+                    <button class="button-48" onclick="instalarMotor({{ selectedItem.id }}, {{ car.id }})"><span class="text">Instalar Motor</span></button>
+                {% elseif selectedItem %}
+                    <p>Nombre: {{ selectedItem.getId() }}</p>
+                    <p>Categoría: {{ selectedItem.categoria }}</p>
+                    <p>Velocidad punta: {{ selectedItem.velocidadPunta }}</p>
+                    <button class="button-48" onclick="instalarPieza('{{ selectedType }}', {{ selectedItem.id }}, {{ car.id }})"><span class="text">Instalar {{ selectedType | capitalize }}</span></button>
                 {% else %}
-                    <p>Selecciona un motor o pieza para ver los detalles.</p>
+                    <p>Selecciona un elemento para ver los detalles.</p>
                 {% endif %}
             </div>
         </div>
         <div class="middle">
-            <button onclick="window.location.href='?type=motor'" class="button-48"><span class="text">Motor</span></button>
-            <button onclick="window.location.href='?type=pieza'" class="button-48"><span class="text">Pieza</span></button>
+            <select id="type-selector" onchange="handleTypeChange()">
+                <option value="motor" {% if selectedType == 'motor' %}selected{% endif %}>Motor</option>
+                <option value="ecu" {% if selectedType == 'ecu' %}selected{% endif %}>ECU</option>
+                <option value="sistema_de_combustible" {% if selectedType == 'sistema_de_combustible' %}selected{% endif %}>Sistema de Combustible</option>
+                <option value="induccion" {% if selectedType == 'induccion' %}selected{% endif %}>Inducción</option>
+                <option value="turbocompresor" {% if selectedType == 'turbocompresor' %}selected{% endif %}>Turbocompresor</option>
+                <option value="nitro" {% if selectedType == 'nitro' %}selected{% endif %}>Nitro</option>
+            </select>
         </div>
         <div class="bottom">
             {% for item in items %}
-                <div class="bottom-item">
+                <div class="bottom-item" style="background-image: url('/images/piezas/{% if selectedType == 'motor' %}140.png{% endif %}{% if selectedType == 'ecu' %}100-_1_.png{% endif %}{% if selectedType == 'induccion' %}110.png{% endif %}{% if selectedType == 'nitro' %}100.png{% endif %}{% if selectedType == 'turbocompresor' %}150.png{% endif %}{% if selectedType == 'sistema_de_combustible' %}100-_2_.png{% endif %}'); background-size: cover;">
                     <a href="?type={{ selectedType }}&id={{ item.id }}">
-                        {{ selectedType == 'motor' ? 'Motor ' ~ item.id : item.nombre }}
+                        {{ selectedType == 'motor' ? 'Motor ' ~ item.id : 'ID ' ~ item.id }}
                     </a>
                 </div>
             {% else %}
                 <p>No hay {{ selectedType }}s disponibles.</p>
             {% endfor %}
         </div>
+     
     </div>
+
+
+
+    </div>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+            "GLTFLoader": "https://unpkg.com/three@0.150.1/examples/jsm/loaders/GLTFLoader.js",
+            "OrbitControls": "https://unpkg.com/three@0.150.1/examples/jsm/controls/OrbitControls.js"
+          }
+        }
+    </script>
+    <script>
+        function handleTypeChange() {
+            const select = document.getElementById('type-selector');
+            const selectedType = select.value;
+            window.location.href = `?type=${selectedType}`;
+        }
+
+        function instalarMotor(motorId, cocheId) {
+            fetch('/api/install_motor', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': '{{ csrf_token('install_motor') }}'
+                },
+                body: JSON.stringify({
+                    motorId: motorId,
+                    cocheId: cocheId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error al instalar el motor: ' + data.error);
+                } else {
+                    alert('Motor instalado correctamente');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error en la petición: ' + error.message);
+            });
+        }
+function instalarPieza(tipo, piezaId, motorId) {
+    fetch('/api/install_component', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': '{{ csrf_token('install_pieza') }}'
+        },
+        body: JSON.stringify({
+            coche_id: motorId,
+            component_type: tipo,
+            component_id: piezaId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert('Error al instalar la pieza: ' + data.error);
+        } else {
+            alert(`${tipo.charAt(0).toUpperCase() + tipo.slice(1)} instalado correctamente`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error en la petición: ' + error.message);
+    });
+}
+
+
+
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'GLTFLoader';
+        import { OrbitControls } from 'OrbitControls';
+
+        const scene = new THREE.Scene();
+
+        const textureLoader = new THREE.TextureLoader();
+        const backgroundTexture = textureLoader.load('../images/editar.png');
+        scene.background = backgroundTexture;
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(1, 0.2, -3);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('scene-container').appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+
+        const ambientLight = new THREE.AmbientLight(0x404040, 4); 
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 2); 
+        directionalLight.position.set(5, 10, 7.5).normalize();
+        scene.add(directionalLight);
+
+        const loader = new GLTFLoader();
+        const modeloPath = "{{ path }}"; 
+
+        loader.load(modeloPath, (gltf) => {
+            const carModel = gltf.scene;
+            carModel.position.set(0, -0.6, 0); 
+            carModel.rotation.set(0, 1.5, 0);
+            carModel.scale.set(0.8, 0.8, 0.8); 
+            scene.add(carModel);
+        }, undefined, function (error) {
+            console.error('An error happened while loading the model:', error);
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        });
+    </script>
 </body>
 </html>

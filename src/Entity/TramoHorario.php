@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\TramoHorarioRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TramoHorarioRepository::class)]
@@ -14,12 +12,20 @@ class TramoHorario
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[ORM\Column(type: "time")]
     private ?\DateTimeInterface $inicio = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[ORM\Column(type: "time")]
     private ?\DateTimeInterface $fin = null;
 
+    #[ORM\ManyToOne(targetEntity: Horario::class, inversedBy: 'tramosHorarios')]
+    private ?Horario $horario = null;
+
+   
+    public function __toString(): string
+    {
+        return $this->descripcion ?? '';
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +51,18 @@ class TramoHorario
     public function setFin(\DateTimeInterface $fin): static
     {
         $this->fin = $fin;
+
+        return $this;
+    }
+
+    public function getHorario(): ?Horario
+    {
+        return $this->horario;
+    }
+
+    public function setHorario(?Horario $horario): static
+    {
+        $this->horario = $horario;
 
         return $this;
     }

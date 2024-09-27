@@ -34,7 +34,8 @@
             overflow-y: auto;
         }
         .modal-content {
-            
+            padding: 10px;
+            color: white;
         }
         .close-btn {
             color: #aaa;
@@ -49,77 +50,324 @@
             text-decoration: none;
             cursor: pointer;
         }
-        .modal-image{
-             padding: 0;
+        .modal-image {
+            width: 100%;
+            height: auto;
         }
+        .modal-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .carreras-modal {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            background-color: #222;
+            color: white;
+            overflow-y: auto;
+            z-index: 1001;
+            padding: 20px;
+        }
+
+        #menuButton {
+  appearance: none;
+  background-color: #FFFFFF;
+  border-width: 0;
+  box-sizing: border-box;
+  color: #000000;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Clarkson,Helvetica,sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1em;
+  margin-top: 15px;
+  opacity: 1;
+  outline: 0;
+  padding: 1.5em 2.2em;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-rendering: geometricprecision;
+  text-transform: uppercase;
+  transition: opacity 300ms cubic-bezier(.694, 0, 0.335, 1),background-color 100ms cubic-bezier(.694, 0, 0.335, 1),color 100ms cubic-bezier(.694, 0, 0.335, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+#menuButton:before {
+  animation: opacityFallbackOut .5s step-end forwards;
+  backface-visibility: hidden;
+  background-color: #EBEBEB;
+  clip-path: polygon(-1% 0, 0 0, -25% 100%, -1% 100%);
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform: translateZ(0);
+  transition: clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1), -webkit-clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1);
+  width: 100%;
+}
+
+#menuButton:hover:before {
+  animation: opacityFallbackIn 0s step-start forwards;
+  clip-path: polygon(0 0, 101% 0, 101% 101%, 0 101%);
+}
+
+#menuButton:after {
+  background-color: #FFFFFF;
+}
+
+#menuButton span {
+  z-index: 1;
+  position: relative;
+}
+
+#show-races-btn {
+  appearance: none;
+  background-color: #FFFFFF;
+  border-width: 0;
+  box-sizing: border-box;
+  color: #000000;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Clarkson,Helvetica,sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1em;
+  margin-top: 15px;
+  opacity: 1;
+  outline: 0;
+  padding: 1.5em 2.2em;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-rendering: geometricprecision;
+  text-transform: uppercase;
+  transition: opacity 300ms cubic-bezier(.694, 0, 0.335, 1),background-color 100ms cubic-bezier(.694, 0, 0.335, 1),color 100ms cubic-bezier(.694, 0, 0.335, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+#show-races-btn:before {
+  animation: opacityFallbackOut .5s step-end forwards;
+  backface-visibility: hidden;
+  background-color: #EBEBEB;
+  clip-path: polygon(-1% 0, 0 0, -25% 100%, -1% 100%);
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform: translateZ(0);
+  transition: clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1), -webkit-clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1);
+  width: 100%;
+}
+
+#show-races-btn:hover:before {
+  animation: opacityFallbackIn 0s step-start forwards;
+  clip-path: polygon(0 0, 101% 0, 101% 101%, 0 101%);
+}
+
+#show-races-btn:after {
+  background-color: #FFFFFF;
+}
+
+#show-races-btn span {
+  z-index: 1;
+  position: relative;
+}
+
     </style>
 </head>
 <body>
     <div id="map"></div>
-
-    <!-- Modal -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
-            <img id="modal-image" src="" alt="Imagen" style="width: 100%;">
+            <img id="modal-image" class="modal-image" src="" alt="Imagen">
+            <p id="circuito-description"></p>
+            <button id="show-races-btn" class="modal-button">Mostrar carreras</button>
+            <br>
+            <button id="menuButton" onclick="window.location.href='/#menu'">
+                <span class="text">Ir al Menú</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="carreras-modal" class="carreras-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="carreras-list"></div>
         </div>
     </div>
 
     <script>
-        // Crear el mapa
-        var map = L.map('map', {
+        var map = L.map('map', 
+        {
             crs: L.CRS.Simple,
             minZoom: -2,
             maxZoom: 2,
             maxBoundsViscosity: 1.0
         });
 
-        // Tamaño de la imagen (en píxeles)
         var bounds = [[0, 0], [7048, 14096]];
         var image = L.imageOverlay('{{ asset('images/map.png') }}', bounds).addTo(map);
 
-        // Ajustar la vista inicial del mapa a los límites de la imagen
         map.fitBounds(bounds);
 
-        // Limitar el desplazamiento del mapa a los límites de la imagen
         map.setMaxBounds(bounds);
 
-        // Array de puntos (coordenadas x, y dentro de la imagen y la ruta de la imagen para el modal)
-        var points = [
-            { coords: [3000, 10310], image: '{{ asset('images/carreras/carrera1.jpg') }}' },
-            { coords: [1870, 8430], image: '{{ asset('images/carreras/carrera2.jpg') }}' },
-            { coords: [4960, 10500], image: '{{ asset('images/carreras/carrera3.jpg') }}' },
-            { coords: [4350, 7600], image: '{{ asset('images/carreras/carrera4.jpg') }}' },
-            { coords: [4270, 6480], image: '{{ asset('images/carreras/carrera5.jpg') }}' },
-            { coords: [850, 6980], image: '{{ asset('images/carreras/carrera6.jpg') }}' },
-            { coords: [3800, 9050], image: '{{ asset('images/carreras/carrera7.jpg') }}' },
-            { coords: [3750, 5230], image: '{{ asset('images/carreras/carrera1.jpg') }}' }
+       var points = [
+            { coords: [3000, 10310], image: '{{ asset('images/carreras/carrera1.jpg') }}', circuitoId: 1 },
+            { coords: [1870, 8430], image: '{{ asset('images/carreras/carrera2.jpg') }}', circuitoId: 2 },
+            { coords: [4960, 10500], image: '{{ asset('images/carreras/carrera3.jpg') }}', circuitoId: 3 },
+            { coords: [4350, 7600], image: '{{ asset('images/carreras/carrera4.jpg') }}', circuitoId: 4 },
+            { coords: [4270, 6480], image: '{{ asset('images/carreras/carrera5.jpg') }}', circuitoId: 5 },
+            { coords: [850, 6980], image: '{{ asset('images/carreras/carrera6.jpg') }}', circuitoId: 6 },
+            { coords: [3800, 9050], image: '{{ asset('images/carreras/carrera7.jpg') }}', circuitoId: 7 },
+            { coords: [3750, 5230], image: '{{ asset('images/carreras/carrera8.png') }}', circuitoId: 8 }
         ];
 
-        // Obtener el modal y el contenido del modal
-        var modal = document.getElementById('modal');
-        var modalImg = document.getElementById('modal-image');
-        var span = document.getElementsByClassName('close-btn')[0];
+    var modal = document.getElementById('modal');
+    var modalImg = document.getElementById('modal-image');
+    var circuitoDescription = document.getElementById('circuito-description');
+    var showRacesBtn = document.getElementById('show-races-btn');
+    var span = document.getElementsByClassName('close-btn')[0];
 
-        // Agregar marcadores al mapa
-        points.forEach(function(point) {
-            L.marker(point.coords).addTo(map).on('click', function() {
-                modalImg.src = point.image;
-                modal.style.display = 'block';
+    var carrerasModal = document.getElementById('carreras-modal');
+    var carrerasList = document.getElementById('carreras-list');
+    var carrerasSpan = document.getElementsByClassName('close-btn')[1];
+
+    function mostrarCarreras(circuitoId) {
+    fetch('/carreras/circuito/' + circuitoId)
+        .then(response => response.json())
+        .then(data => {
+            let carrerasHtml = '<ul>';
+            const now = new Date(); 
+
+            data.forEach(carrera => {
+               
+              let carreraFecha = new Date(carrera.fecha); // Utilizar directamente la cadena de fecha
+
+                // Verificar si la fecha es válida
+                if (isNaN(carreraFecha.getTime())) {
+                    console.error('Fecha inválida para la carrera ID:', carrera.id);
+                    return; // Salir si la fecha es inválida
+                }
+
+              // Comparar la fecha de la carrera con la fecha y hora actuales
+    const now = new Date(); // Asegúrate de que "now" está definido antes
+    const isPast = carreraFecha <= now;
+
+    // Formatear la fecha en el formato deseado: día-mes-año
+    const formattedDate = formatDate(carreraFecha);
+
+    // Determinar si el usuario ya está inscrito
+    const isAlreadyInscribed = carrera.yaInscrito;
+
+    // Cambiar estilo y comportamiento según la fecha y si el usuario ya está inscrito
+    const textStyle = isPast ? 'style="color: grey;"' : '';
+    const buttonHtml = isPast
+        ? '<button class="inscribir-btn" disabled>Fuera de plazo</button>'
+        : isAlreadyInscribed
+        ? '<button class="inscribir-btn" disabled>Ya inscrito</button>'
+        : `<button class="inscribir-btn" data-carrera-id="${carrera.id}">Inscribirse</button>`;
+
+    carrerasHtml += `<li ${textStyle}>Carrera ID: ${carrera.id} - Fecha: ${formattedDate} - Horario: ${carrera.horario} ${buttonHtml}</li>`;
+});
+
+            carrerasHtml += '</ul>';
+            carrerasList.innerHTML = carrerasHtml;
+
+            carrerasModal.style.display = 'block';
+
+            // Asignar event listeners solo a los botones activos (que no están deshabilitados)
+            document.querySelectorAll('.inscribir-btn:not([disabled])').forEach(button => {
+                button.addEventListener('click', function () {
+                    let carreraId = this.getAttribute('data-carrera-id');
+                    fetch('/carrera/' + carreraId + '/inscribirse', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message) {
+                                alert(data.message);
+                            } else {
+                                alert('Error en la inscripción');
+                            }
+                        });
+                });
             });
+        })
+        .catch(error => console.error('Error al obtener carreras:', error));
+}
+
+// Función para formatear la fecha en día-mes-año
+function formatDate(date) {
+    let day = String(date.getDate()).padStart(2, '0'); // Día con dos dígitos
+    let month = String(date.getMonth() + 1).padStart(2, '0'); // Mes con dos dígitos (mes es 0-indexado)
+    let year = date.getFullYear(); // Año
+
+    return `${day}-${month}-${year}`; // Formato día-mes-año
+}
+
+
+    points.forEach(function(point) 
+    {
+        L.marker(point.coords).addTo(map).on('click', function() 
+        {
+        
+            modalImg.src = point.image;
+            circuitoDescription.textContent = point.description;
+            modal.style.display = 'block';
+        
+            showRacesBtn.onclick = function() 
+            {
+                modal.style.display = 'none'; 
+                mostrarCarreras(point.circuitoId);
+            };
         });
+    });
 
-        // Cuando el usuario hace clic en (x), cerrar el modal
-        span.onclick = function() {
+
+    span.onclick = function() 
+    {
+        modal.style.display = 'none';
+    };
+    carrerasSpan.onclick = function() {
+        carrerasModal.style.display = 'none';
+    };
+
+    window.onclick = function(event) 
+    {
+        if (event.target == modal) {
             modal.style.display = 'none';
+        } else if (event.target == carrerasModal) {
+            carrerasModal.style.display = 'none';
         }
+    };
 
-        // Cuando el usuario hace clic fuera del modal, cerrarlo
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
     </script>
 </body>
 </html>

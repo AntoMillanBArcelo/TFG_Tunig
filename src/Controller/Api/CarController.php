@@ -6,6 +6,7 @@ namespace App\Controller\Api;
 use App\Entity\Coche;
 use App\Repository\CocheRepository;
 use App\Repository\UserRepository;
+use App\Repository\MotorRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+
 class CarController extends AbstractController
 {
 
@@ -130,4 +132,65 @@ public function create(Request $request, EntityManagerInterface $em, UserReposit
 
         return new JsonResponse(['message' => 'Car deleted successfully'], Response::HTTP_NO_CONTENT);
     }
+
+    #[Route('/api/install_motor', name: 'api_install_motor', methods: ['POST'])]
+    public function installMotor(
+        Request $request, 
+        EntityManagerInterface $em, 
+        CocheRepository $cocheRepository, 
+        MotorRepository $motorRepository,
+        LoggerInterface $logger
+    ): JsonResponse {
+        $em->getConnection()->beginTransaction();
+    
+        try {
+            // Decodificar el contenido del JSON
+            $data = json_decode($request->getContent(), true);
+    
+            // Validar que se envían todos los parámetros requeridos
+            if (empty($data['cocheId']) || empty($data['motorId'])) {
+                throw new \Exception('Faltan parámetros necesarios');
+            }
+    
+            // Buscar coche y motor
+            $coche = $cocheRepository->find($data['cocheId']);
+            $motor = $motorRepository->find($data['motorId']);
+    
+            // Validar que ambos existan
+            if (!$coche) {
+                throw new \Exception('Coche no encontrado');
+            }
+            if (!$motor) {
+                throw new \Exception('Motor no encontrado');
+            }
+    
+            // Asignar el motor al coche
+            $coche->setMotor($motor);
+    
+            // Guardar cambios en la base de datos
+            $em->persist($coche);
+            $em->flush();
+            $em->getConnection()->commit();
+    
+            // Responder con los detalles del coche actualizado
+            return $this->json([
+                'id' => $coche->getId(),
+                'modelo' => $coche->getModelo(),
+                'año' => $coche->getAño(),
+                'color' => $coche->getColor(),
+                'motor' => [
+                    'id' => $motor->getId(),
+                    'caballos' => $motor->getCaballos(),
+                    'par_maximo' => $motor->getParMaximo(),
+                    'cuarto_milla' => $motor->getCuartoMilla()
+                ]
+            ], Response::HTTP_OK);
+    
+        } catch (\Exception $e) {
+            $em->getConnection()->rollBack();
+            $logger->error('Error instalando el motor: ' . $e->getMessage());
+            return $this->json(['error' => 'Error interno del servidor: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

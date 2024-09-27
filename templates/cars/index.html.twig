@@ -15,7 +15,13 @@
         <span id="closeModal">&times;</span>
         <h2 id="modalTitle"></h2>
         <p id="modalContent"></p>
-        <button id="acquireButton">Adquirir</button>
+        <button id="acquireButton">
+          <span class="text">Adquirir</span>
+        </button>
+
+        <button id="menuButton" onclick="window.location.href='/#menu'">
+          <span class="text">Ir al Menú</span>
+        </button>
     </div>
     <script type="importmap">
     {
@@ -47,7 +53,7 @@
       controls.target.set(0, 1, 0);
       controls.update();
 
-      const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Aumenta la intensidad de la luz ambiental
+      const ambientLight = new THREE.AmbientLight(0xffffff, 5); // Aumenta la intensidad de la luz ambiental
       scene.add(ambientLight);
 
       const directionalLight = new THREE.DirectionalLight(0xffffff, 2); // Ajusta la intensidad de la luz direccional
@@ -59,7 +65,7 @@
       scene.add(pointLight);
 
       const spotLight = new THREE.SpotLight(0xffffff, 1.5); // Agrega una luz focal
-      spotLight.position.set(5, 5, 0);
+      spotLight.position.set(0, 0, 0);
       spotLight.angle = Math.PI / 6;
       spotLight.penumbra = 0.;
       spotLight.decay = 2;
@@ -117,6 +123,11 @@
          { brand: 'Porsche', logo: '/logos/por.png', models: [
             { name: '911 Carrera s4', path: '/models/free_porsche_911_carrera_4s.glb', type: 'gltf', position: { x: 0, y: 0.15, z: 3 }, description: 'Descripción del modelo Porsche 911 Carrera s4.' },
             { name: '911 930 turbo', path: '/models/porsche_911_930_turbo_1975.glb', type: 'gltf', position: { x: 2, y:2.2, z: 2 }, description: 'Descripción del modelo Porsche 911 930 turbo.' },
+        ]},
+         { brand: 'Mitshubishi', logo: '/logos/mit.png', models: [
+            { name: 'Eclipse', path: '/models/mitsubishi_eclipse.glb', type: 'gltf', position: { x: 0, y: -0.58, z: 3 }, description: 'El Mitsubishi Eclipse fue un automóvil deportivo fabricado por el fabricante japonés Mitsubishi Motors, producido entre 1989 y 2012.El Eclipse ha pasado por cuatro distintas generaciones. Las dos primeras están relacionadas de manera cercana y comparten varias partes, mientras que la tercera generación está basada en una nueva plataforma y la mayoría de sus componentes son distintos a los Eclipses de primera y segunda generación. La cuarta generación fue puesta a la venta en junio de 2005.' },
+            { name: 'EVO Lancer ', path: '/models/mitsubishi_lancer_evo_x_2016.glb', type: 'gltf', position: { x: 0, y: 0.78, z: 3 }, description: 'El Mitsubishi Eclipse fue un automóvil deportivo fabricado por el fabricante japonés Mitsubishi Motors, producido entre 1989 y 2012.El Eclipse ha pasado por cuatro distintas generaciones. Las dos primeras están relacionadas de manera cercana y comparten varias partes, mientras que la tercera generación está basada en una nueva plataforma y la mayoría de sus componentes son distintos a los Eclipses de primera y segunda generación. La cuarta generación fue puesta a la venta en junio de 2005.' },
+        
         ]},
       ];
 
@@ -214,91 +225,85 @@
         );
       }
 
-      function showModal(model) {
-    const modal = document.getElementById('modal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalContent = document.getElementById('modalContent');
-    
-    // Debug: Verificar el contenido de model
-    console.log('Objeto model recibido en showModal:', model);
-
-    modalTitle.textContent = model.name;
-    modalContent.textContent = model.description;
-    
-    modal.style.display = 'block';
-
-    const acquireButton = document.getElementById('acquireButton');
-    acquireButton.style.display = 'block';
-
-    // Verificar si brand está definido, de lo contrario usar un valor por defecto o mostrar un mensaje de error
-    const brand = model.brand ? model.brand : "Marca desconocida"; 
-
-    acquireButton.onclick = () => acquireCar({
-       
-        name: model.name,
-        path: model.path,
-        description: model.description
-    });
-}
-
-
-
-
-     function acquireCar(model) {
-    const detectaLogin = document.getElementById('detectaLogin');
-    const userId = detectaLogin ? parseInt(detectaLogin.getAttribute('data-id'), 10) : 0;
-    
-    if (userId > 0) {
-        const carData = {
-            modelo: model.name,
-            año: null,
-            color: null,
-            usuario_id: userId,
-            modelo3d: model.path,  // Cambiado de ruta_modelo a modelo3d
+      function showModal(model) 
+      {
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
         
-        };
+        console.log('Objeto model recibido en showModal:', model);
 
-        // Log de los datos que se van a enviar al servidor
-        console.log('Datos que se van a enviar:', carData);
+        modalTitle.textContent = model.name;
+        modalContent.textContent = model.description;
+        
+        modal.style.display = 'block';
 
-        fetch('/api/cars', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(carData)
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                return response.json().then(errorData => {
-                    const errorMessage = errorData.error || 'Error desconocido';
-                    throw new Error(`Error en la petición: ${response.statusText}. Detalles: ${errorMessage}`);
-                });
-            }
-        })
-        .then(data => {
-            alert(`El usuario con ID ${userId} ha adquirido el coche: ${model.name}`);
-            console.log('Coche guardado:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Ocurrió un error al guardar el coche. Inténtelo nuevamente. Detalles: ' + error.message);
+        const acquireButton = document.getElementById('acquireButton');
+        acquireButton.style.display = 'block';
+
+        const brand = model.brand ? model.brand : "Marca desconocida"; 
+
+        acquireButton.onclick = () => acquireCar({
+          
+            name: model.name,
+            path: model.path,
+            description: model.description
         });
-    } else {
-        alert('Debe iniciar sesión para adquirir un coche.');
     }
-}
 
+     function acquireCar(model) 
+     {
+        const detectaLogin = document.getElementById('detectaLogin');
+        const userId = detectaLogin ? parseInt(detectaLogin.getAttribute('data-id'), 10) : 0;
+        
+        if (userId > 0) {
+            const carData = {
+                modelo: model.name,
+                año: null,
+                color: null,
+                usuario_id: userId,
+                modelo3d: model.path,  
+            
+            };
+      
+            console.log('Datos que se van a enviar:', carData);
 
-
+            fetch('/api/cars', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(carData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return response.json().then(errorData => {
+                        const errorMessage = errorData.error || 'Error desconocido';
+                        throw new Error(`Error en la petición: ${response.statusText}. Detalles: ${errorMessage}`);
+                    });
+                }
+            })
+            .then(data => {
+                alert(`El usuario con ID ${userId} ha adquirido el coche: ${model.name}`);
+                console.log('Coche guardado:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al guardar el coche. Inténtelo nuevamente. Detalles: ' + error.message);
+            });
+        } else {
+            alert('Debe iniciar sesión para adquirir un coche.');
+        }
+    }
 
       document.getElementById('closeModal').addEventListener('click', () => {
         document.getElementById('modal').style.display = 'none';
         const acquireButton = document.getElementById('acquireButton');
         acquireButton.style.display = 'none';
       });
+
     </script>
 </body>
 </html>

@@ -18,6 +18,10 @@ class Circuito
 
     #[ORM\Column]
     private ?int $ubicacion = null;
+    public function __toString(): string
+    {
+        return $this->descripcion ?? '';
+    }
 
     public function getId(): ?int
     {

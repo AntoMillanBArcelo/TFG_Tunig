@@ -1,4 +1,5 @@
 <?php
+// src/Entity/Horario.php
 
 namespace App\Entity;
 
@@ -15,6 +16,11 @@ class Horario
 
     #[ORM\Column(length: 255)]
     private ?string $descripcion = null;
+
+    public function __toString(): string
+    {
+        return $this->descripcion ?? '';
+    }
 
     public function getId(): ?int
     {
