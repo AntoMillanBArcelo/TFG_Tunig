@@ -79,7 +79,6 @@ class ECU
     public function removeCoche(Coche $coche): static
     {
         if ($this->coches->removeElement($coche)) {
-            // Set the owning side to null (unless already changed)
             if ($coche->getECU() === $this) {
                 $coche->setECU(null);
             }

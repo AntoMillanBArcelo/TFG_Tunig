@@ -81,8 +81,8 @@ class Turbocompresor
 
     public function removeMotor(Motor $motor): static
     {
-        if ($this->motores->removeElement($motor)) {
-            // set the owning side to null (unless already changed)
+        if ($this->motores->removeElement($motor)) 
+        {
             if ($motor->getTurbocompresor() === $this) {
                 $motor->setTurbocompresor(null);
             }

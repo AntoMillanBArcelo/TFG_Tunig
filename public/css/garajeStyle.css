@@ -44,6 +44,7 @@ canvas { display: block; }
 .model-button:hover {
     background-color: #45a049;
 }
+
 /* Estilos para la ventana modal */
 #modal {
     display: none;

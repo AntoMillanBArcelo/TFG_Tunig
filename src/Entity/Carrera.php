@@ -22,7 +22,6 @@ class Carrera
     #[ORM\JoinColumn(nullable: false)]
     private ?Horario $horario = null;
 
-    // Nueva relación con Circuito
     #[ORM\ManyToOne(targetEntity: Circuito::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Circuito $circuito = null;

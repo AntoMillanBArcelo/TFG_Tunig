@@ -81,8 +81,8 @@ class Nitro
 
     public function removeCoche(Coche $coche): static
     {
-        if ($this->coches->removeElement($coche)) {
-            // Set the owning side to null (unless already changed)
+        if ($this->coches->removeElement($coche)) 
+        {
             if ($coche->getNitro() === $this) {
                 $coche->setNitro(null);
             }

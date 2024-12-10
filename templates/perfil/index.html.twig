@@ -16,12 +16,14 @@
         <header>
             <div class="header-content">
                 <span>Bienvenido, {{ user.email }}</span>
-                 {% if is_granted('ROLE_ADMIN') %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('admin') }}" class="admin-button">Panel de Administración</a>
                 {% endif %}
+                <a href="{{ path('app_estadisticas') }}" class="stats-button">Estadísticas</a>
                 <a href="{{ path('app_logout') }}" class="logout-button">Cerrar Sesión</a>
             </div>
         </header>
+
         <main>
             <div class="container">
                 <div class="left-pane">

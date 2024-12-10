@@ -1,167 +1,91 @@
+/* Fondo del body */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     height: 100vh;
-    margin-left: 20%;
-    margin-right: 20%;
-    overflow: hidden;
-    background-image: url('/images/vol8.jpg'); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('/images/vol8.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
-div{
-    background-color: rgba(255, 255, 255, 0.8);
-    height: 100vh;
-}
-h1, h2{
-    background: rgba(255, 255, 255, 0.9);
-}
+
+/* Contenedor principal del contenido */
 .content {
-    width: 80%;
-    max-width: 1200px;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    padding: 1.5rem;
+    width: 90%;
+    max-width: 1000px;
+    background: #ffffff; 
+    padding: 2rem;
+    border-radius: 8px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+    overflow-y: auto;
+    max-height: 90vh;
 }
 
-header {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 1rem;
-    border-bottom: 1px solid #ddd;
-}
-
+/* Estilo del encabezado */
 .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-.logout-button {
-    background-color: #007bff;
-    color: white;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-.logout-button:hover {
-    background-color: #0056b3;
-}
-
-main {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.left-pane, .right-pane {
+/* Estilo general para secciones principales */
+.admin-panel, .user-panel {
+    background: #ffffff; 
     border: 1px solid #ddd;
     padding: 1rem;
-    box-sizing: border-box;
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    overflow: auto;
+    border-radius: 8px;
     margin-bottom: 1rem;
 }
 
-.left-pane h2, .right-pane h2 {
-    margin-top: 0;
-    text-align: center;
-    font-size: 1.5rem;
-    color: #333;
-    
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+table th, table td {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    background: #f0f0f0;
+    font-weight: bold;
 }
 
 ul {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
-    margin: 0;
 }
 
 li {
     padding: 0.5rem 0;
     border-bottom: 1px solid #ddd;
-    color: #555;
 }
 
-li a {
-    text-decoration: none;
-    color: #007bff;
-    transition: color 0.3s ease;
+li span {
+    color: #ff0000;
 }
 
-li a:hover {
-    color: #0056b3;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-}
-
-table th, table td {
-    padding: 0.5rem;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-table th {
-    background-color: #f4f4f9;
-    font-weight: bold;
-}
-
-table input[type="number"] {
-    width: 60px;
-    padding: 0.3rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button[type="submit"],
-.button-back {
-    background-color: #28a745;
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 1rem;
-}
-
-button[type="submit"]:hover,
-.button-back:hover {
-    background-color: #218838;
-}
-
-.button-back {
-    background-color: #007bff;
-    text-decoration: none;
-    display: inline-block;
+footer {
     text-align: center;
+    margin-top: 1rem;
+}
+
+.button-back {
+    text-decoration: none;
+    background: #007BFF;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    transition: background 0.3s ease;
 }
 
 .button-back:hover {
-    background-color: #0056b3;
-}
-
-button {
-    margin-top: 1rem;
+    background: #0056b3;
 }

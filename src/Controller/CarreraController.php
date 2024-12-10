@@ -1,8 +1,5 @@
 <?php
 // src/Controller/CarreraController.php
-
-// src/Controller/CarreraController.php
-
 namespace App\Controller;
 
 use App\Entity\Carrera;
@@ -28,24 +25,20 @@ class CarreraController extends AbstractController
         TramoHorarioRepository $tramoHorarioRepository,
         EntityManagerInterface $entityManager
     ): Response {
-        $fechaCarrera = $request->request->get('fecha'); // La fecha de la carrera desde el formulario
+        $fechaCarrera = $request->request->get('fecha');
         $fecha = new DateTime($fechaCarrera);
 
-        // Determinar si es invierno o verano
         $temporada = $this->determinarTemporada($fecha);
         $horario = $horarioRepository->findOneBy(['descripcion' => $temporada]);
 
-        // Validar si la fecha es lunes o si está fuera del horario permitido
         if (!$this->validarCarrera($fecha, $horario, $tramoHorarioRepository)) {
             $this->addFlash('error', 'No puedes crear una carrera en este día u horario.');
             return $this->redirectToRoute('formulario_carrera');
         }
 
-        // Crear la carrera
         $carrera = new Carrera();
         $carrera->setFecha($fecha);
 
-        // Persistir y guardar la carrera
         $entityManager->persist($carrera);
         $entityManager->flush();
 
@@ -56,32 +49,33 @@ class CarreraController extends AbstractController
     private function validarCarrera(DateTime $fecha, Horario $horario, TramoHorarioRepository $tramoHorarioRepository): bool
     {
         // Verificar si la carrera es un lunes
-        if ($fecha->format('N') === '1') {
-            return false; // Es lunes, no se puede correr
+        if ($fecha->format('N') === '1') 
+        {
+            return false; 
         }
 
-        // Verificar si la hora está dentro del horario permitido
         $horaCarrera = $fecha->format('H:i:s');
 
         $tramosHorarios = $tramoHorarioRepository->findBy(['horario' => $horario]);
 
-        foreach ($tramosHorarios as $tramo) {
+        foreach ($tramosHorarios as $tramo) 
+        {
             $horaInicio = $tramo->getInicio()->format('H:i:s');
             $horaFin = $tramo->getFin()->format('H:i:s');
 
             if ($horaCarrera >= $horaInicio && $horaCarrera <= $horaFin) {
-                return true; // Está dentro del horario permitido
+                return true;
             }
         }
 
-        return false; // No está dentro del horario permitido
+        return false;
     }
 
     private function determinarTemporada(DateTime $fecha): string
     {
         $mes = (int) $fecha->format('m');
 
-        // En este ejemplo, consideramos invierno de noviembre a marzo y verano de abril a octubre
+        // EL invierno es de noviembre a marzo y verano de abril a octubre
         if ($mes >= 11 || $mes <= 3) {
             return 'invierno';
         } else {
@@ -90,38 +84,32 @@ class CarreraController extends AbstractController
     }
 
     #[Route('/carreras/circuito/{id}', name: 'carreras_por_circuito')]
-public function carrerasPorCircuito(
-    int $id, 
-    CarreraRepository $carreraRepository, 
-    InscripcionRepository $inscripcionRepository
-): JsonResponse {
-    // Obtener el usuario actual
-    $usuario = $this->getUser();
-    
-    // Obtener las carreras asociadas al circuito
-    $carreras = $carreraRepository->findBy(['circuito' => $id]);
-    $response = [];
-
-    // Recorrer cada carrera para construir la respuesta
-    foreach ($carreras as $carrera) {
-        // Verificar si el usuario ya está inscrito en la carrera
-        $yaInscrito = $inscripcionRepository->findOneBy([
-            'user' => $usuario,
-            'carrera' => $carrera,
-        ]) !== null;
-
-        // Añadir la información de la carrera y si el usuario ya está inscrito
-        $response[] = [
-            'id' => $carrera->getId(),
-            'fecha' => $carrera->getFecha()->format('Y-m-d H:i:s'),
-            'horario' => $carrera->getHorario()->getDescripcion(),
-            'yaInscrito' => $yaInscrito, // Indica si el usuario ya está inscrito
-        ];
-    }
-
-    return new JsonResponse($response);
-}
-
+        public function carrerasPorCircuito(
+            int $id, 
+            CarreraRepository $carreraRepository, 
+            InscripcionRepository $inscripcionRepository
+        ): JsonResponse {
+         
+            $usuario = $this->getUser();     
+            $carreras = $carreraRepository->findBy(['circuito' => $id]);
+            $response = [];
+        
+            foreach ($carreras as $carrera) 
+            {
+                $yaInscrito = $inscripcionRepository->findOneBy([
+                    'user' => $usuario,
+                    'carrera' => $carrera,
+                ]) !== null;
+               
+                $response[] = [
+                    'id' => $carrera->getId(),
+                    'fecha' => $carrera->getFecha()->format('Y-m-d H:i:s'),
+                    'horario' => $carrera->getHorario()->getDescripcion(),
+                    'yaInscrito' => $yaInscrito, 
+                ];
+            }
+            return new JsonResponse($response);
+        }
 
     #[Route('/carrera/{id}/inscribirse', name: 'inscribirse_carrera')]
     public function inscribirse(int $id, CarreraRepository $carreraRepository, EntityManagerInterface $entityManager, Security $security): Response
@@ -145,45 +133,34 @@ public function carrerasPorCircuito(
     }
 
     #[Route('/carrera/{id}/asignar-posiciones', name: 'asignar_posiciones')]
-public function asignarPosiciones(
-    Request $request,
-    int $id,
-    InscripcionRepository $inscripcionRepository,
-    EntityManagerInterface $entityManager
-): Response {
-    // Verificar si el formulario fue enviado (método POST)
-    if ($request->isMethod('POST')) {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    public function asignarPosiciones(
+        Request $request,
+        int $id,
+        InscripcionRepository $inscripcionRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        if ($request->isMethod('POST')) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // Obtener las posiciones desde el formulario
-        $posiciones = $request->request->all('posiciones');
+            $posiciones = $request->request->all('posiciones');
 
-        foreach ($posiciones as $inscripcionId => $posicion) {
-            $inscripcion = $inscripcionRepository->find($inscripcionId);
-            if ($inscripcion) {
-                $inscripcion->setPosicion($posicion);
-                $entityManager->persist($inscripcion);
+            foreach ($posiciones as $inscripcionId => $posicion) {
+                $inscripcion = $inscripcionRepository->find($inscripcionId);
+                if ($inscripcion) {
+                    $inscripcion->setPosicion($posicion);
+                    $entityManager->persist($inscripcion);
+                }
             }
+            $entityManager->flush();
+
+            return $this->redirectToRoute('asignar_posiciones', ['id' => $id]);
         }
-        $entityManager->flush();
 
-        // Redirigir a la misma página solo después de procesar el formulario
-        return $this->redirectToRoute('asignar_posiciones', ['id' => $id]);
-    }
+        $inscripciones = $inscripcionRepository->findBy(['carrera' => $id]);
 
-    // Obtener las inscripciones para la carrera
-    $inscripciones = $inscripcionRepository->findBy(['carrera' => $id]);
-
-    // Renderizar la plantilla sin redirección
-    return $this->render('carrera/detalles.html.twig', [
-        'inscripciones' => $inscripciones,
-        'carrera_id' => $id,
-    ]);
-}
-
-  
-    
-
-    
-
+        return $this->render('carrera/detalles.html.twig', [
+            'inscripciones' => $inscripciones,
+            'carrera_id' => $id,
+        ]);
+    } 
 }

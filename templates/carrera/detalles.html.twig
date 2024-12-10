@@ -4,55 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/carreraStyle.css') }}">
-    <title>Perfil</title>
+    <title>Detalles de la Carrera</title>
 </head>
 <body>
-<div>
-<h1>Detalles de la Carrera</h1>
+<div class="content">
+    <header class="header-content">
+        <h1>Detalles de la Carrera</h1>
+    </header>
 
-{% if is_granted('ROLE_ADMIN') %}
+    <main>
+        {% if is_granted('ROLE_ADMIN') %}
+            <section class="admin-panel">
+                <h2>Asignar Posiciones</h2>
+                <form action="{{ path('asignar_posiciones', { id: inscripciones[0].carrera.id }) }}" method="POST">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Posición</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inscripcion in inscripciones %}
+                                <tr>
+                                    <td>{{ inscripcion.user.email }}</td>
+                                    <td>
+                                        <input type="number" name="posiciones[{{ inscripcion.id }}]" value="{{ inscripcion.posicion }}" min="1">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button type="submit">Asignar Posiciones</button>
+                </form>
+            </section>
+        {% else %}
+            <section class="user-panel">
+                <h2>Posiciones de la carrera</h2>
+                <ul>
+                    {% for inscripcion in inscripciones %}
+                        <li>
+                            {{ inscripcion.user.email }} - 
+                            {% if inscripcion.posicion %}
+                                Posición: {{ inscripcion.posicion }}
+                            {% else %}
+                                <span>Mantenimiento: Posición aún no asignada.</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endif %}
+    </main>
 
-    <h2>Asignar posiciones</h2>
-    <form action="{{ path('asignar_posiciones', { id: inscripciones[0].carrera.id }) }}" method="POST">
-        <table>
-            <thead>
-                <tr>
-                    <th>Usuario</th>
-                    <th>Posición</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for inscripcion in inscripciones %}
-                    <tr>
-                        <td>{{ inscripcion.user.email }}</td>
-                        <td>
-                            <input type="number" name="posiciones[{{ inscripcion.id }}]" value="{{ inscripcion.posicion }}" min="1">
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <button type="submit">Asignar Posiciones</button>
-    </form>
-{% else %}
-
-    <h2>Posiciones de la carrera</h2>
-    <ul>
-        {% for inscripcion in inscripciones %}
-            <li>
-                {{ inscripcion.user.email }} - 
-                {% if inscripcion.posicion %}
-                    Posición: {{ inscripcion.posicion }}
-                {% else %}
-                    <span>Mantenimiento: Posición aún no asignada.</span>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-    
-{% endif %}
-
-<a href="{{ path('app_perfil') }}" class="button-back">Volver a Perfil</a>
+    <footer>
+        <a href="{{ path('app_perfil') }}" class="button-back">
+            <span>Volver a Perfil</span>
+        </a>
+    </footer>
 </div>
 </body>
 </html>

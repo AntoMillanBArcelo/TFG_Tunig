@@ -1,0 +1,312 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Estadísticas{% endblock %}
+
+{% block stylesheets %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+    background-image: url('/images/fondostats.jpg'); /* Ruta relativa desde public/ */
+    background-size: cover; /* Escala la imagen para que cubra todo el fondo */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-attachment: fixed; /* La imagen se queda fija al hacer scroll */
+    background-position: center; /* Centra la imagen */
+    color: #fff; /* Opcional: cambia el color del texto si es necesario */
+}
+
+        .contenedor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: #ffffffd4;
+            width: fit-content;
+            margin: 2% auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+            
+        }
+
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+
+        }
+
+        .menu button {
+            width: 100px;
+            height: 40px;
+            background-color: #666666; /* Botones gris oscuro */
+            color: #ffffff;
+            border: none;
+           
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .menu button:hover {
+            background-color: #888888;
+            transform: translateY(-2px);
+        }
+
+        .grafica {
+            background-color: white; /* Fondo gris claro */
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+           
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .estadisticas {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .estadistica {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: white; /* Gris oscuro */
+           
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .estadistica:first-child {
+            align-self: flex-end; /* Alinea abajo a la izquierda */
+            margin-right: 10px;
+        }
+
+        .estadistica:last-child {
+            align-self: flex-end; /* Alinea abajo a la derecha */
+            margin-left: 10px;
+        }
+
+        .estadistica:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .estadistica.azul {
+            background-color: white; /* Gris intermedio */
+        }
+
+        .estadistica.verde {
+            background-color: white; /* Gris con un leve matiz */
+        }
+    </style>
+{% endblock %}
+
+
+{% block body %}
+<div class="contenedor">
+    <!-- Menú -->
+   <div class="menu">
+    <!-- Botón para redirigir a /#menu -->
+    <button onclick="location.href='/#menu'">Inicio</button>
+    
+    <!-- Botón para redirigir a la ruta Symfony 'app_perfil' -->
+    <button onclick="location.href='{{ path('app_perfil') }}'">Perfil</button>
+</div>
+
+
+    <!-- Gráfica -->
+    <div class="grafica">
+        <canvas id="grafica-posiciones"></canvas>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="estadisticas">
+        <!-- Estadísticas Generales -->
+       <div class="estadistica azul">
+    <canvas id="grafica-posiciones-usuarios"></canvas>
+</div>
+
+<script>
+    // Datos de la gráfica desde el backend
+    const datosUsuarios = {{ datos_grafica_usuarios|json_encode|raw }};
+
+    // Transformar datos para agrupar por usuario
+    const usuarios = [...new Set(datosUsuarios.map(d => d.usuario))]; // Lista de usuarios únicos
+    const fechas = [...new Set(datosUsuarios.map(d => d.fecha))]; // Lista de fechas únicas
+
+    // Crear un dataset para cada usuario
+    const datasets = usuarios.map(usuario => {
+        const datosUsuario = datosUsuarios.filter(d => d.usuario === usuario);
+        const posicionesPorFecha = fechas.map(fecha => {
+            const dato = datosUsuario.find(d => d.fecha === fecha);
+            return dato ? dato.posicion : null; // Null si no hay datos para esa fecha
+        });
+
+        return {
+            label: usuario,
+            data: posicionesPorFecha,
+            borderColor: `hsl(${Math.random() * 360}, 70%, 50%)`, // Color aleatorio
+            tension: 0.3,
+            fill: false,
+            pointRadius: 5
+        };
+    });
+
+    // Crear la gráfica
+    const ctxUsuarios = document.getElementById('grafica-posiciones-usuarios').getContext('2d');
+    new Chart(ctxUsuarios, {
+        type: 'line',
+        data: {
+            labels: fechas, // Eje X: fechas de las carreras
+            datasets: datasets // Conjunto de datos por usuario
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: Posición ${context.raw}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Posición',
+                    },
+                    ticks: {
+                        reverse: true, // Orden inverso para mostrar la posición 1 arriba
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Fecha',
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+       
+
+<div class="estadistica verde">
+    <canvas id="graficaPosicionesAltas"></canvas>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const posicionesAltas = {{ posiciones_altas|json_encode|raw }};
+        const labels = posicionesAltas.map(p => p.carrera);
+        const data = posicionesAltas.map(p => p.posicion_mas_alta);
+
+        const ctx = document.getElementById('graficaPosicionesAltas').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Posición más alta',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+    </div>
+</div>
+
+<script>
+   
+    const datos = {{ datos_grafica|json_encode|raw }};
+
+   
+    const etiquetas = datos.map(d => d.fecha); 
+    const posiciones = datos.map(d => d.posicion); 
+
+    // Aqui se crea la grafica
+    const ctx = document.getElementById('grafica-posiciones').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: etiquetas,
+            datasets: [{
+                label: 'Posiciones en Carreras',
+                data: posiciones,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.3,
+                fill: false,
+                pointBackgroundColor: 'rgb(255, 99, 132)',
+                pointRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Posición: ' + context.raw;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Posición',
+                    },
+                    ticks: {
+                        reverse: true
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Fecha',
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

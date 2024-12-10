@@ -15,6 +15,21 @@ class InscripcionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Inscripcion::class);
     }
+        
+        public function findHighestPositionsByRace(): array
+        {
+            return $this->createQueryBuilder('i')
+                ->select('circuito.ubicacion AS carrera', 'MIN(i.posicion) AS posicion_mas_alta')
+                ->join('i.carrera', 'c') 
+                ->join('c.circuito', 'circuito')
+                ->groupBy('circuito.ubicacion')
+                ->orderBy('posicion_mas_alta', 'ASC')
+                ->getQuery()
+                ->getResult();
+        }
+
+
+    
 
     //    /**
     //     * @return Inscripcion[] Returns an array of Inscripcion objects

@@ -273,25 +273,25 @@
                 }
 
               // Comparar la fecha de la carrera con la fecha y hora actuales
-    const now = new Date(); // Asegúrate de que "now" está definido antes
-    const isPast = carreraFecha <= now;
+        const now = new Date(); 
+        const isPast = carreraFecha <= now;
 
-    // Formatear la fecha en el formato deseado: día-mes-año
-    const formattedDate = formatDate(carreraFecha);
+        // Formatear la fecha en el formato deseado: día-mes-año
+        const formattedDate = formatDate(carreraFecha);
 
-    // Determinar si el usuario ya está inscrito
-    const isAlreadyInscribed = carrera.yaInscrito;
+        // Determinar si el usuario ya está inscrito
+        const isAlreadyInscribed = carrera.yaInscrito;
 
-    // Cambiar estilo y comportamiento según la fecha y si el usuario ya está inscrito
-    const textStyle = isPast ? 'style="color: grey;"' : '';
-    const buttonHtml = isPast
-        ? '<button class="inscribir-btn" disabled>Fuera de plazo</button>'
-        : isAlreadyInscribed
-        ? '<button class="inscribir-btn" disabled>Ya inscrito</button>'
-        : `<button class="inscribir-btn" data-carrera-id="${carrera.id}">Inscribirse</button>`;
+        // Cambiar estilo y comportamiento según la fecha y si el usuario ya está inscrito
+        const textStyle = isPast ? 'style="color: grey;"' : '';
+        const buttonHtml = isPast
+            ? '<button class="inscribir-btn" disabled>Fuera de plazo</button>'
+            : isAlreadyInscribed
+            ? '<button class="inscribir-btn" disabled>Ya inscrito</button>'
+            : `<button class="inscribir-btn" data-carrera-id="${carrera.id}">Inscribirse</button>`;
 
-    carrerasHtml += `<li ${textStyle}>Carrera ID: ${carrera.id} - Fecha: ${formattedDate} - Horario: ${carrera.horario} ${buttonHtml}</li>`;
-});
+        carrerasHtml += `<li ${textStyle}>Carrera ID: ${carrera.id} - Fecha: ${formattedDate} - Horario: ${carrera.horario} ${buttonHtml}</li>`;
+    });
 
             carrerasHtml += '</ul>';
             carrerasList.innerHTML = carrerasHtml;
@@ -323,50 +323,50 @@
         .catch(error => console.error('Error al obtener carreras:', error));
 }
 
-// Función para formatear la fecha en día-mes-año
-function formatDate(date) {
-    let day = String(date.getDate()).padStart(2, '0'); // Día con dos dígitos
-    let month = String(date.getMonth() + 1).padStart(2, '0'); // Mes con dos dígitos (mes es 0-indexado)
-    let year = date.getFullYear(); // Año
 
-    return `${day}-${month}-${year}`; // Formato día-mes-año
-}
+    function formatDate(date) {
+        let day = String(date.getDate()).padStart(2, '0'); 
+        let month = String(date.getMonth() + 1).padStart(2, '0'); 
+        let year = date.getFullYear(); 
+
+        return `${day}-${month}-${year}`; 
+    }
 
 
-    points.forEach(function(point) 
-    {
-        L.marker(point.coords).addTo(map).on('click', function() 
+        points.forEach(function(point) 
         {
-        
-            modalImg.src = point.image;
-            circuitoDescription.textContent = point.description;
-            modal.style.display = 'block';
-        
-            showRacesBtn.onclick = function() 
+            L.marker(point.coords).addTo(map).on('click', function() 
             {
-                modal.style.display = 'none'; 
-                mostrarCarreras(point.circuitoId);
-            };
+            
+                modalImg.src = point.image;
+                circuitoDescription.textContent = point.description;
+                modal.style.display = 'block';
+            
+                showRacesBtn.onclick = function() 
+                {
+                    modal.style.display = 'none'; 
+                    mostrarCarreras(point.circuitoId);
+                };
+            });
         });
-    });
 
 
-    span.onclick = function() 
-    {
-        modal.style.display = 'none';
-    };
-    carrerasSpan.onclick = function() {
-        carrerasModal.style.display = 'none';
-    };
-
-    window.onclick = function(event) 
-    {
-        if (event.target == modal) {
+        span.onclick = function() 
+        {
             modal.style.display = 'none';
-        } else if (event.target == carrerasModal) {
+        };
+        carrerasSpan.onclick = function() {
             carrerasModal.style.display = 'none';
-        }
-    };
+        };
+
+        window.onclick = function(event) 
+        {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            } else if (event.target == carrerasModal) {
+                carrerasModal.style.display = 'none';
+            }
+        };
 
     </script>
 </body>

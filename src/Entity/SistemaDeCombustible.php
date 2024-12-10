@@ -81,8 +81,8 @@ class SistemaDeCombustible
 
     public function removeMotor(Motor $motor): static
     {
-        if ($this->motores->removeElement($motor)) {
-            // set the owning side to null (unless already changed)
+        if ($this->motores->removeElement($motor)) 
+        {
             if ($motor->getSistemaDeCombustible() === $this) {
                 $motor->setSistemaDeCombustible(null);
             }
