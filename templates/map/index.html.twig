@@ -264,25 +264,21 @@
 
             data.forEach(carrera => {
                
-              let carreraFecha = new Date(carrera.fecha); // Utilizar directamente la cadena de fecha
+              let carreraFecha = new Date(carrera.fecha); 
 
-                // Verificar si la fecha es válida
+                // Verifica si la fecha es válida
                 if (isNaN(carreraFecha.getTime())) {
                     console.error('Fecha inválida para la carrera ID:', carrera.id);
-                    return; // Salir si la fecha es inválida
+                    return; 
                 }
 
-              // Comparar la fecha de la carrera con la fecha y hora actuales
+              
         const now = new Date(); 
         const isPast = carreraFecha <= now;
-
-        // Formatear la fecha en el formato deseado: día-mes-año
         const formattedDate = formatDate(carreraFecha);
 
-        // Determinar si el usuario ya está inscrito
+       
         const isAlreadyInscribed = carrera.yaInscrito;
-
-        // Cambiar estilo y comportamiento según la fecha y si el usuario ya está inscrito
         const textStyle = isPast ? 'style="color: grey;"' : '';
         const buttonHtml = isPast
             ? '<button class="inscribir-btn" disabled>Fuera de plazo</button>'
@@ -298,7 +294,7 @@
 
             carrerasModal.style.display = 'block';
 
-            // Asignar event listeners solo a los botones activos (que no están deshabilitados)
+            
             document.querySelectorAll('.inscribir-btn:not([disabled])').forEach(button => {
                 button.addEventListener('click', function () {
                     let carreraId = this.getAttribute('data-carrera-id');

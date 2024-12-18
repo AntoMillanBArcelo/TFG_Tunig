@@ -142,38 +142,36 @@
 </div>
 
 <script>
-    // Datos de la gráfica desde el backend
+
     const datosUsuarios = {{ datos_grafica_usuarios|json_encode|raw }};
 
-    // Transformar datos para agrupar por usuario
-    const usuarios = [...new Set(datosUsuarios.map(d => d.usuario))]; // Lista de usuarios únicos
-    const fechas = [...new Set(datosUsuarios.map(d => d.fecha))]; // Lista de fechas únicas
+    const usuarios = [...new Set(datosUsuarios.map(d => d.usuario))]; 
+    const fechas = [...new Set(datosUsuarios.map(d => d.fecha))]; 
 
-    // Crear un dataset para cada usuario
     const datasets = usuarios.map(usuario => {
         const datosUsuario = datosUsuarios.filter(d => d.usuario === usuario);
         const posicionesPorFecha = fechas.map(fecha => {
             const dato = datosUsuario.find(d => d.fecha === fecha);
-            return dato ? dato.posicion : null; // Null si no hay datos para esa fecha
+            return dato ? dato.posicion : null; 
         });
 
         return {
             label: usuario,
             data: posicionesPorFecha,
-            borderColor: `hsl(${Math.random() * 360}, 70%, 50%)`, // Color aleatorio
+            borderColor: `hsl(${Math.random() * 360}, 70%, 50%)`, 
             tension: 0.3,
             fill: false,
             pointRadius: 5
         };
     });
 
-    // Crear la gráfica
+
     const ctxUsuarios = document.getElementById('grafica-posiciones-usuarios').getContext('2d');
     new Chart(ctxUsuarios, {
         type: 'line',
         data: {
-            labels: fechas, // Eje X: fechas de las carreras
-            datasets: datasets // Conjunto de datos por usuario
+            labels: fechas,
+            datasets: datasets 
         },
         options: {
             responsive: true,
@@ -197,7 +195,7 @@
                         text: 'Posición',
                     },
                     ticks: {
-                        reverse: true, // Orden inverso para mostrar la posición 1 arriba
+                        reverse: true, 
                     }
                 },
                 x: {
@@ -259,7 +257,7 @@
     const etiquetas = datos.map(d => d.fecha); 
     const posiciones = datos.map(d => d.posicion); 
 
-    // Aqui se crea la grafica
+    
     const ctx = document.getElementById('grafica-posiciones').getContext('2d');
     new Chart(ctx, {
         type: 'line',
